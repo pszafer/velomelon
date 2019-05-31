@@ -61,7 +61,7 @@ const Progress = ({ url, active, siteTitle, pageTitle, children, floatingClasses
         < div id="floating-header" className={floatingClasses} >
         <div className="floating-header-logo">
             <LocalizedLink to="/" aria-label={backToHome}>
-                <Logo className="floating-header-logo" logo="600" />
+                    <Logo className="floating-header-logo" logoTypes="600" />
                 <span>{siteTitle}</span>
             </LocalizedLink>
         </div>

@@ -1,6 +1,5 @@
 const path = require(`path`)
 const locales = require(`./config/i18n`)
-const _ = require("lodash")
 const {
   localizedSlug,
   findKey,

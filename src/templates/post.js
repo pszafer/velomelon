@@ -2,16 +2,13 @@ import React from "react"
 import { graphql } from "gatsby"
 import MDXRenderer from "gatsby-mdx/mdx-renderer"
 import { MDXProvider } from '@mdx-js/react'
-
 import { Header } from "../components/header"
 import BackgroundImage from 'gatsby-background-image'
 import MdxLink from "../components/mdx/mdxLink"
 import MdxYoutube from "../components/mdx/mdxYoutube"
-import MdxGrid from "../components/mdx/mdxGrid"
 import MdxMap from "../components/mdx/mdxMap"
 import Readmore from '../components/readmore'
 import ReadProgressLine from '../components/progress'
-import { withMDXScope } from "gatsby-mdx/context";
 import Img from 'gatsby-image'
 
 class Post extends React.Component {
@@ -34,7 +31,6 @@ class Post extends React.Component {
         return <MdxMap url={this.props.location.href} >{children}</MdxMap>
       },
       youtube: MdxYoutube,
-      grid: MdxGrid,
       wrapper: ({ children, ...props }) => {
         return <>{children}</>
       }

@@ -1,7 +1,6 @@
 import React, { createRef, Component } from 'react'
 import { StaticQuery, graphql } from "gatsby"
-import { Map, Marker, Popup, TileLayer, GeoJSON } from 'react-leaflet'
-import hash from 'object-hash';
+import { Map, TileLayer, GeoJSON } from 'react-leaflet'
 
 export default props => (
     <StaticQuery
@@ -59,16 +58,17 @@ class MyMap extends Component {
     }
 
     render() {
+        if (typeof window !== 'undefined') {
         return (
-            <Map
-                ref={this.mapLayer}
-            >
+            <Map ref={this.mapLayer}>
                 <TileLayer
                     attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <GeoJSON ref={this.geoJsonLayer} onEachFeature={this.onEachFeature} />
-            </Map>
-        );
+                 <GeoJSON ref={this.geoJsonLayer} onEachFeature={this.onEachFeature} />
+             </Map>
+         );
+        }
+        return null;
     }
 }

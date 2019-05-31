@@ -6,8 +6,6 @@ import useTranslations from "../components/useTranslations"
 import Img from 'gatsby-image'
 
 const Tags = ({ data: { allMdx, rawData }, pageContext }) => {
-    const { hello, subline } = useTranslations()
-    console.log(rawData)
     return (
         <div className="site-wrapper">
             <Header

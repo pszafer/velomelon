@@ -1,4 +1,4 @@
-const locales = require(`../../config/i18n`)
+import locales from "../../config/i18n"
 
 function getLocale(locale) {
     let lang = locale || 'en'
