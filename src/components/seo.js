@@ -12,6 +12,33 @@ import { getLocale } from "../utils/shared"
 import { useStaticQuery, graphql } from "gatsby"
 
 function SEO({ description, lang, meta, keywords, title }) {
+    const favicon = useStaticQuery(graphql`
+        query {
+            file(relativePath: { eq: "logo600.png" }) {
+                childImageSharp {
+                    fav64: fixed(width:64, height:64){
+                        base64
+                    }
+                }
+            }
+            file(relativePath: { eq: "logo600.png" }) {
+                childImageSharp {
+                    fav32: fixed(width:32, height:32){
+                        base64
+                    }
+                }
+            }
+            file(relativePath: { eq: "logo600.png" }) {
+                childImageSharp {
+                    fav16: fixed(width:16, height:16){
+                        base64
+                    }
+                }
+            }
+        }
+    `)
+    console.log("dupa")
+    console.log(favicon)
     // const { localeInfo } = React.useContext(LocaleContext)
     const defaultTitle = getLocale(lang).defaultTitle;
     title = title == defaultTitle ? title : title + ' - ' + defaultTitle;
@@ -25,6 +52,11 @@ function SEO({ description, lang, meta, keywords, title }) {
             }}
             title={title}
             titleTemplate={`%s`}
+            link={[
+                { rel: "icon", type: "image/png", sizes: "16x16", href: `${favicon.file.childImageSharp.fav16.base64}` },
+                { rel: "icon", type: "image/png", sizes: "32x32", href: `${favicon.file.childImageSharp.fav32.base64}` },
+                { rel: "shortcut icon", type: "image/png", href: `${favicon.file.childImageSharp.fav64.base64}` },
+            ]}
             meta={[
                 {
                     name: `description`,
