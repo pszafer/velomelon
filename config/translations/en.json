@@ -1,0 +1,30 @@
+[
+  {
+    "text": "hello",
+    "translation": "Hello and welcome to this i18n example site!"
+  },
+  {
+    "text":"subline",
+    "translation":"You can read some of my cool articles I wrote!"
+  },
+  {
+    "text": "backToHome",
+    "translation":"Back to home"
+  },
+  {
+    "text":"polish",
+    "translation":"Polish"
+  },
+  {
+    "text":"english",
+    "translation":"English"
+  },
+  {
+    "text":"shareThis",
+    "translation":"Share this"
+  },
+  {
+    "text": "europe",
+    "translation": "Europe"
+  }
+]

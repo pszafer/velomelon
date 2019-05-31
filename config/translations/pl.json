@@ -1,0 +1,30 @@
+[
+  {
+    "text": "hello",
+    "translation": "Witamy"
+  },
+  {
+    "text":"subline",
+    "translation":"Nasza wspólna rowerowa przygoda"
+  },
+  {
+    "text": "backToHome",
+    "translation":"Strona główna"
+  },
+  {
+    "text":"polish",
+    "translation":"Polski"
+  },
+  {
+    "text":"english",
+    "translation":"Angielski"
+  },
+  {
+    "text":"shareThis",
+    "translation":"Udostępnij"
+  },
+  {
+    "text": "europe",
+    "translation": "Europa"
+  }
+]
