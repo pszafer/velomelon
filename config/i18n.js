@@ -13,7 +13,10 @@ module.exports = {
     aboutUs: "About Us",
     europe: "Europe",
     poland: "Poland",
-    memories: "memories"
+    memories: "memories",
+    bike: "Bike",
+    usa: "USA",
+    preparation: "Preparation"
   },
   pl: {
     path: `pl`,
@@ -26,6 +29,9 @@ module.exports = {
     aboutUs: "O Nas",
     europe: "Europa",
     poland: "Polska",
-    memories: "Wspomnienia"
+    memories: "Wspomnienia",
+    bike: "Rower",
+    usa: "USA",
+    preparation: "Przygotowanie"
   },
 }

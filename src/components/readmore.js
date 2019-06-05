@@ -9,24 +9,28 @@ const Readmore = ({previous, next}) => {
                     <article className="read-next-card">
                         <header className="read-next-card-header">
                             <small className="read-next-card-header-sitetitle">— Velomelon —</small>
-                            <h3 className="read-next-card-header-title"><a href="/tag/getting-started/">Getting Started</a></h3>
+                            {/* <h3 className="read-next-card-header-title"><a href="/tag/getting-started/">Getting Started</a></h3> */}
                         </header>
                         <div className="read-next-card-content">
                             <ul>
                                 {previous && (
-                                    <LocalizedLink to={previous.slug} rel="prev">
+                                    <li><LocalizedLink to={previous.slug} rel="prev">
                                         {previous.title}
                                     </LocalizedLink>
+                                    </li>
                                 )}
                                 {next && (
-                                    <LocalizedLink to={next.slug} rel="prev">
+                                    <li><LocalizedLink to={next.slug} rel="prev">
                                         {next.title}
                                     </LocalizedLink>
+                                    </li>
                                 )}
                             </ul>
                         </div>
                         <footer className="read-next-card-footer">
-                            <a href="/tag/getting-started/">See all 6 posts →</a>
+                            <LocalizedLink to="/">
+                                See all posts →
+                            </LocalizedLink>
                         </footer>
                     </article>
 

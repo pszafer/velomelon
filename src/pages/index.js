@@ -27,7 +27,9 @@ const Index = ({ data: { allMdx }, pageContext }) => {
                 <div className="post-card-content">
                   <LocalizedLink alt={post.frontmatter.title} className="post-card-content-link" to={`/${post.parent.relativeDirectory}`}>  
                     <header className="post-card-header">
-                      <span className="post-card-tags">TAGS</span>
+                      <span className="post-card-tags">
+                          {post.frontmatter.tags.join(', ')}
+                      </span>
                       <h2 className="post-card-title">{post.frontmatter.title}</h2>
                     </header>
                     <section className="post-card-excerpt">
@@ -49,7 +51,7 @@ export default Index
 export const query = graphql`
   query Index($locale: String!, $dateFormat: String!) {
     allMdx(
-      filter: { fields: { locale: { eq: $locale } } }
+      filter: { fields: { locale: { eq: $locale } isHidden: { eq: false } } }
       sort: { fields: [frontmatter___date], order: DESC }
     ) {
       edges {
@@ -64,6 +66,7 @@ export const query = graphql`
               }
             }
             date(formatString: $dateFormat)
+            tags
           }
           excerpt(pruneLength:280)
           fields {

@@ -2777,3 +2777,10 @@ body {
   height: 100%;
   width: 100%;
 }
+
+span.post-card-tags a:last-child:after {
+    content: '';
+}
+span.post-card-tags a:after {
+    content: "\002C";
+}

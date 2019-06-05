@@ -275,3 +275,9 @@
   max-width: 100%;
   margin: auto;
 }
+
+.post-content:after {
+    content: "";
+    width: 100%;
+    height: 20px;
+}

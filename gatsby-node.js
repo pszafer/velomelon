@@ -47,8 +47,10 @@ exports.onCreateNode = ({ node, actions }) => {
     // Find the key that has "default: true" set (in this case it returns "en")
     const defaultKey = findKey(locales, o => o.default === true)
     const lang = isDefault ? defaultKey : name.split(`.`)[1]
+    const hidden = node.frontmatter.hidden ? true : false
     createNodeField({ node, name: `locale`, value: lang })
     createNodeField({ node, name: `isDefault`, value: isDefault })
+    createNodeField({ node, name: `isHidden`, value: hidden })
     createNodeField({ node, name: `dateFormat`, value: locales[lang].dateFormat })
   }
 }
@@ -74,6 +76,7 @@ exports.createPages = async ({ graphql, actions }) => {
               frontmatter {
                 title
                 tags
+                date
               }
             }
           }
@@ -85,15 +88,18 @@ exports.createPages = async ({ graphql, actions }) => {
   if (result.errors) {
     return
   }
-  const postList = result.data.blog.edges
+  var postList = result.data.blog.edges
+  postList.sort(function (a, b) {
+    a = new Date(a.node.childMdx.frontmatter.date);
+    b = new Date(b.node.childMdx.frontmatter.date);
+    return a > b ? -1 : a < b ? 1 : 0;
+  });
+  const posts = postList
   var allTags = {
     pl: {},
     en: {}
   }
-  //pl = { TAG: { dateFormat: 'dateFormat', isDefault: 'isDefault' } }
-  //
-  //
-  postList.forEach(({ node: post }, index) => {
+  posts.forEach(({ node: post }, index) => {
     var slug;
     var title;
     const tags = post.childMdx.frontmatter.tags
@@ -122,27 +128,27 @@ exports.createPages = async ({ graphql, actions }) => {
 
     slug = post.relativeDirectory
     title = post.childMdx.frontmatter.title
-    let previous = null
-    let next = null
+    let _prev, _next = null;
     for (let i=index-1; i>0; --i){
-      if (postList[i] && postList[i].node.childMdx.fields.locale == locale){
-        previous = {
-          slug: '/'+postList[i].node.relativeDirectory,
-          title: postList[i].node.childMdx.frontmatter.title
+      if (posts[i] && posts[i].node.childMdx.fields.locale == locale){
+        _prev = {
+          slug: '/' + posts[i].node.relativeDirectory,
+          title: posts[i].node.childMdx.frontmatter.title
         }
         break;
       }
     }
-    for (let i=index+1; i<postList.length; ++i) {
-      if (postList[i] && postList[i].node.childMdx.fields.locale == locale) {
-        next = {
-          slug: '/'+postList[i].node.relativeDirectory,
-          title: postList[i].node.childMdx.frontmatter.title
+    for (let i = index + 1; i < posts.length; ++i) {
+      if (posts[i] && posts[i].node.childMdx.fields.locale == locale) {
+        _next = {
+          slug: '/' + posts[i].node.relativeDirectory,
+          title: posts[i].node.childMdx.frontmatter.title
         }
         break;
       }
     }
-    
+    const previous = _prev;
+    const next = _next;
     createPage({
       path: localizedSlug({ isDefault, locale, slug }),
       component: postTemplate,

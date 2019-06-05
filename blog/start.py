@@ -28,7 +28,7 @@ for dir in os.listdir(directory):
                             r = requests.get(url)
                             with open(imgPath, 'wb') as image:
                                 image.write(r.content)
-                        x = '!()[./{}]\n'.format(imgName)
+                        x = '![](./{})\n'.format(imgName)
                     temp.write(x)
                 temp.close()
                 f.close()
