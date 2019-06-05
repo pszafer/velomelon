@@ -74,8 +74,8 @@ function Nav( {isHome, title, headerData }) {
               <li className="nav-home nav-current" role="menuitem">
                 
               </li>
-              <li className="nav-about" role="menuitem"><a href="https://demo.ghost.io/about/">{aboutUs}</a></li>
-              <li className="nav-getting-started" role="menuitem"><a href="https://demo.ghost.io/tag/getting-started/">Getting Started</a></li>
+              {/* <li className="nav-about" role="menuitem"><a href="https://demo.ghost.io/about/">{aboutUs}</a></li>
+              <li className="nav-getting-started" role="menuitem"><a href="https://demo.ghost.io/tag/getting-started/">Getting Started</a></li> */}
               <li className="nav-try-ghost" role="menuitem">
                
         </li>

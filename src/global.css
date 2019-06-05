@@ -2784,3 +2784,7 @@ span.post-card-tags a:last-child:after {
 span.post-card-tags a:after {
     content: "\002C";
 }
+
+.home-template .site-wrapper .site-header.outer.responsive-header-img:after {
+    /* background: 50% -25% / cover no-repeat rgb(9, 10, 11); */
+}
