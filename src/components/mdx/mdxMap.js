@@ -48,7 +48,6 @@ class MyMap extends Component {
             }
         })
         this.urls = [];
-        console.log(this.props.geojsons)
         this.props.geojsons.forEach(item => {
             if (geos[item.node.base]){
                 this.urls.push(item.node.publicURL);
@@ -106,7 +105,7 @@ class MyMap extends Component {
             this.geoJsonLayer.current.leafletElement.addData(res);
             this.mapLayer.current.leafletElement.fitBounds(this.geoJsonLayer.current.leafletElement.getBounds())
             this.mapLayer.current.leafletElement.invalidateSize()
-            console.log(res.features)
+            // console.log(res.features)
             var distance = 0;
             res.features.forEach(item => {
                 if (item.properties.coordTimes && item.properties.coordTimes.length == item.geometry.coordinates.length){

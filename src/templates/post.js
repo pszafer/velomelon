@@ -18,8 +18,6 @@ class Post extends React.Component {
 
   render(){
     const { data: { mdx }, pageContext } = this.props;
-    console.log("props")
-    console.log(this.props)
     const components = {
       a: ({ children, ...props }) => {
         // if (props.className == "gatsby-resp-image-link"){

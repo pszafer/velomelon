@@ -37,13 +37,10 @@ function SEO({ description, lang, meta, keywords, title }) {
             }
         }
     `)
-    console.log("dupa")
-    console.log(favicon)
     // const { localeInfo } = React.useContext(LocaleContext)
     const defaultTitle = getLocale(lang).defaultTitle;
     title = title == defaultTitle ? title : title + ' - ' + defaultTitle;
     const metaDescription = description
-    console.log(metaDescription);
     const author = "at"
     return (
         <Helmet
