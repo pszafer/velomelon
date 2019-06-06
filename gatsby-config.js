@@ -17,7 +17,7 @@ module.exports = {
             resolve: "gatsby-remark-images",
             options: {
               maxWidth: 1035,
-              sizeByPixelDensity: true,
+              // sizeByPixelDensity: true,
               withWebp: true,
               linkImagesToOriginal: false,
               // wrapperStyle: fluidResult => `flex:${_.round(fluidResult.aspectRatio, 2)};`,
