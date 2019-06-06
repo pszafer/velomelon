@@ -7,6 +7,7 @@ import BackgroundImage from 'gatsby-background-image'
 import MdxLink from "../components/mdx/mdxLink"
 import MdxYoutube from "../components/mdx/mdxYoutube"
 import MdxMap from "../components/mdx/mdxMap"
+import MdxSphere from "../components/mdx/mdxSphere"
 import Readmore from '../components/readmore'
 import ReadProgressLine from '../components/progress'
 import Img from 'gatsby-image'
@@ -27,6 +28,9 @@ class Post extends React.Component {
       },
       gpx: ({ children }) => {
         return <MdxMap url={this.props.location.href} >{children}</MdxMap>
+      },
+      sphere: ({ children }) => {
+        return <MdxSphere url={this.props.location.href} >{children}</MdxSphere>
       },
       youtube: MdxYoutube,
       wrapper: ({ children, ...props }) => {

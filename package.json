@@ -36,6 +36,7 @@
     "leaflet": "^1.5.1",
     "leaflet-polylinedecorator": "^1.6.0",
     "npm": "^6.9.0",
+    "photo-sphere-viewer": "^3.5.1",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-helmet": "^5.2.1",
