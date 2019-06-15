@@ -4,27 +4,75 @@
     "translation": "Witamy"
   },
   {
-    "text":"subline",
-    "translation":"Nasza wspólna rowerowa przygoda"
+    "text": "subline",
+    "translation": "Nasza wspólna rowerowa przygoda"
+  },
+  {
+    "text": "tags",
+    "translation": "Tagi"
   },
   {
     "text": "backToHome",
-    "translation":"Strona główna"
+    "translation": "Strona główna"
   },
   {
-    "text":"polish",
-    "translation":"Polski"
+    "text": "home",
+    "translation": "Główna"
   },
   {
-    "text":"english",
-    "translation":"Angielski"
+    "text": "map",
+    "translation": "Trasa"
   },
   {
-    "text":"shareThis",
-    "translation":"Udostępnij"
+    "text": "map_description",
+    "translation": "Nasza trasa Ameryki"
+  },
+  {
+    "text": "polish",
+    "translation": "Polski"
+  },
+  {
+    "text": "english",
+    "translation": "Angielski"
+  },
+  {
+    "text": "shareThis",
+    "translation": "Udostępnij"
   },
   {
     "text": "europe",
     "translation": "Europa"
+  },
+  {
+    "text": "distance",
+    "translation": "dystans"
+  },
+  {
+    "text": "saddletime",
+    "translation": "czas na siodle"
+  },
+  {
+    "text": "kmh",
+    "translation": "km/h"
+  },
+  {
+    "text": "mph",
+    "translation": "mph"
+  },
+  {
+    "text": "days",
+    "translation": "dni"
+  },
+  {
+    "text": "avgspeed",
+    "translation": "średnia prędkość"
+  },
+  {
+    "text": "elevation_up",
+    "translation": "jazda wzwyż"
+  },
+  {
+    "text": "elevation_down",
+    "translation": "jazda z górki"
   }
 ]

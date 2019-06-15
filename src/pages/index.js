@@ -9,7 +9,12 @@ const Index = ({ data: { allMdx }, pageContext }) => {
   // useTranslations is aware of the global context (and therefore also "locale")
   // so it'll automatically give back the right translations
   const { hello, subline } = useTranslations()
-
+  allMdx.edges.map(({ node: post }) => {
+    if (!post.frontmatter.caption){
+      console.log("dupa")
+      console.log(post);
+    }
+  })
   return (
     <div className="site-wrapper">
       <Header
@@ -25,10 +30,10 @@ const Index = ({ data: { allMdx }, pageContext }) => {
                   <Img className="post-card-image" fluid={post.frontmatter.caption.childImageSharp.fluid} />
                 </LocalizedLink>
                 <div className="post-card-content">
-                  <LocalizedLink alt={post.frontmatter.title} className="post-card-content-link" to={`/${post.parent.relativeDirectory}`}>  
+                  <LocalizedLink alt={post.frontmatter.title} className="post-card-content-link" to={`/${post.parent.relativeDirectory}`}>
                     <header className="post-card-header">
                       <span className="post-card-tags">
-                          {post.frontmatter.tags.join(', ')}
+                        {post.frontmatter.tags.join(', ')}
                       </span>
                       <h2 className="post-card-title">{post.frontmatter.title}</h2>
                     </header>
@@ -44,6 +49,12 @@ const Index = ({ data: { allMdx }, pageContext }) => {
       </main>
     </div>
   )
+}
+
+function logPost(post){
+  if (!post.frontmatter.caption){
+    console.log(post)
+  }
 }
 
 export default Index

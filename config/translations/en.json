@@ -4,27 +4,75 @@
     "translation": "Hello and welcome to this i18n example site!"
   },
   {
-    "text":"subline",
-    "translation":"You can read some of my cool articles I wrote!"
+    "text": "subline",
+    "translation": "You can read some of my cool articles I wrote!"
+  },
+  {
+    "text": "tags",
+    "translation": "Tags"
   },
   {
     "text": "backToHome",
-    "translation":"Back to home"
+    "translation": "Back to home"
   },
   {
-    "text":"polish",
-    "translation":"Polish"
+    "text": "home",
+    "translation": "Home"
   },
   {
-    "text":"english",
-    "translation":"English"
+    "text": "map",
+    "translation": "Route"
   },
   {
-    "text":"shareThis",
-    "translation":"Share this"
+    "text": "map_description",
+    "translation": "Our route across America continents"
+  },
+  {
+    "text": "polish",
+    "translation": "Polish"
+  },
+  {
+    "text": "english",
+    "translation": "English"
+  },
+  {
+    "text": "shareThis",
+    "translation": "Share this"
   },
   {
     "text": "europe",
     "translation": "Europe"
+  },
+  {
+    "text": "distance",
+    "translation": "distance"
+  },
+  {
+    "text": "saddletime",
+    "translation": "time on saddle"
+  },
+  {
+    "text": "kmh",
+    "translation": "km/h"
+  },
+  {
+    "text": "mph",
+    "translation": "mph"
+  },
+  {
+    "text": "days",
+    "translation": "days"
+  },
+  {
+    "text": "avgspeed",
+    "translation": "average speed"
+  },
+  {
+    "text": "elevation_up",
+    "translation": "elevation up"
+  },
+  {
+    "text": "elevation_down",
+    "translation": "elevation down"
   }
 ]

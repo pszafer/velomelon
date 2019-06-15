@@ -2,6 +2,8 @@
     --light-green: rgba(39, 255, 0, 0.7);
     --dark-green: rgb(27, 137, 7);
     --gray-color: rgba(52,63,68,.8);
+    --border: 1px solid #ddd;
+    --symbol-color: #FF7F5B;
 }
 
 
@@ -12,10 +14,6 @@
 .site-logo, .site-nav-logo {
     -webkit-transition: all 1s ease;
     transition: all 1s ease;
-}
-
-.home-template .site-nav {
-    top: -15px;
 }
 
 .site-nav {
@@ -293,4 +291,212 @@
 
 .psv-navbar svg{
     vertical-align: initial;
+}
+
+.map-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20%, 1fr));
+    text-align: center;
+}
+
+.map-grid-element {
+    /* border-right: 5px solid red; */
+    display: grid;
+    grid-template-rows: 3ch 3ch 3ch;
+    font-size: 80%;
+}
+
+.map-grid-element {
+  /* display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--symbol-color);
+  font-size: 2.5rem; */
+}
+
+.map-grid-element-data:nth-child(-n+2) {
+  border-bottom: var(--border);
+}
+
+.map-grid-element:nth-child(-n+3) .map-grid-element-data:nth-child(n) {
+  border-right: var(--border);
+}
+ 
+.map-grid-element-data:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.map-grid-element-data:nth-child(3n) {
+  /* border-left: var(--border); */
+}
+
+.map-grid-element-data:nth-child(n+7) {
+  border-top: var(--border);
+}
+
+.map-grid-element-data span {
+    font-size: 80%;
+    color: var(--gray-color);
+}
+
+.map-grid-element-info {
+    /* border: 1px solid black; */
+    color:var(--gray-color);
+    opacity: 0.8;
+    font-size: 60%;
+}
+
+.openlayer-table {
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,.14), 0 3px 1px -2px rgba(0,0,0,.2), 0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+.openlayer-table td {
+    border: 1px solid rgba(0,0,0,.12);
+    text-align: center;
+    background-color: var(--first-color);
+}
+
+.openlayer-table td.header {
+    background-color: var(--second-color);
+}
+
+.osm-map:-moz-full-screen {
+        height: 100%;
+      }
+.osm-map:-webkit-full-screen {
+        height: 100%;
+      }
+.osm-map:-ms-fullscreen {
+        height: 100%;
+      }
+.osm-map:fullscreen {
+        height: 100%;
+      }
+
+.legend {
+    bottom: 1px;
+    left: 1px;
+}
+
+
+.legend {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    /*    max-width: 120px;*/
+}
+
+.legend .legend-item:after{
+    content: '';
+    display: inline-block;
+    height: 3px;
+    background: red;
+    width: 10px;
+    display: flex;
+    align-self: center;
+    float: right;
+    margin-top: 9px;
+    margin-left: 5px;
+}
+
+.legend div.bicycle:after{
+    background: red;
+}
+
+.legend div.plane:after{
+    background: yellow;
+}
+
+.legend div.dedo:after{
+    background: blue;
+}
+
+.legend .fa-bicycle {
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: RED;
+}
+
+.legend .fa-plane {
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: yellow; 
+}
+
+.legend .fa-truck {
+    color: blue;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: blue; 
+}
+
+.gauge-box {
+    display: flex;
+}
+
+.gauge-box .speed, .gauge-box .distance {
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    text-align: center;
+    border-radius: 15px;
+    margin: 3px;
+}
+
+.gauge-box .speed:before{
+    content: "SPEED";
+}
+
+.gauge-box .distance:before{
+    content: "DISTANCE";
+}
+
+.allTags {
+    list-style:none;
+}
+
+.tagcloud a {
+    text-decoration: none;
+    box-shadow: none;
+}
+
+.tagcloud {
+    padding: 5px;
+    border-radius: 10px;
+    background-color: var(--light-green);
+}
+
+.tagclass-16 {
+    font-size: 400%
+}
+.tagclass-8 {
+    font-size: 300%;
+
+}
+.tagclass-4 {
+    font-size: 200%;
+
+}
+.tagclass-2 {
+    font-size: 100%;
+}
+
+@media screen and (max-width: 1024px) {
+    .linechart-box {
+        display: none;
+    }
+
+    .gauge-box {
+        margin-right: 0px !important;
+    }
+
+    .gauge-box .speed:before, .gauge-box .distance:before{
+        font-size: 0.7em;
+    }    
+    .map-statistics {
+        margin-top: 10px;
+    }
+}
+
+.nav-item svg {
+    vertical-align: text-top;
 }

@@ -1,26 +1,50 @@
 import React, { createRef, Component } from 'react'
+import ReactDOM from 'react-dom';
+
 import { StaticQuery, graphql } from "gatsby"
-import { LeafletPolyline } from "react-leaflet-polyline"
-// import { DistanceMarkers } from "react-leaflet-distance-marker"
-import * as L from 'leaflet';
-// import L from 'leaflet'
-import { Map, TileLayer, GeoJSON } from 'react-leaflet'
-// import { getDistance, isGeoJSON, toArray } from 'geojson-tools'
-// import "https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+import Map from 'ol/Map';
+import View from 'ol/View';
+import XYZ from 'ol/source/XYZ'
+import Point from 'ol/geom/Point.js';
+import Vector from 'ol/source/Vector';
+import TileLayer from 'ol/layer/Tile';
+import VectorLayer from 'ol/layer/Vector';
+import GeoJSON from 'ol/format/GeoJSON';
+import { getDistance } from 'ol/sphere'
+import { Stroke, Style as olStyle, Icon } from "ol/style";
+import { defaults as defaultControls, FullScreen, Control } from 'ol/control';
+import { IoIosBicycle, IoIosAirplane, IoMdBus, IoMdTrendingUp, IoMdTrendingDown, IoIosTimer } from 'react-icons/io'
+import { FaRuler } from 'react-icons/fa'
+import useTranslations from "../useTranslations"
 
-// exports.onRenderBody = function (_ref, options) {
-//     var setHeadComponents = _ref.setHeadComponents;
-//     if (options.linkStyles === false) return false;
-//     var link = React.createElement('link', {
-//         key: 'leaflet',
-//         rel: 'stylesheet',
-//         href: 'https://unpkg.com/leaflet@1.5.1/dist/leaflet.css',
-//         integrity: 'sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==',
-//         crossOrigin: ''
-//     });
-//     setHeadComponents([link]);
-// };
+import "ol/ol.css"
 
+var lineStyles = {
+    'dedo': {
+        'LineString': new olStyle({
+            stroke: new Stroke({
+                color: 'blue',
+                width: 1
+            })
+        })
+    },
+    'bike': {
+        'LineString': new olStyle({
+            stroke: new Stroke({
+                color: 'red',
+                width: 2
+            })
+        })
+    },
+    'plane': {
+        'LineString': new olStyle({
+            stroke: new Stroke({
+                color: 'yellow',
+                width: 0.5
+            })
+        })
+    }
+};
 
 export default props => (
     <StaticQuery
@@ -36,7 +60,7 @@ export default props => (
             }
             }
         `}
-        render={({ geojsons }) => <div className="leaf"><MyMap geojsons={geojsons.edges} {...props} /></div>}
+        render={({ geojsons }) => <div style={{ width: "100%"}}><MyMap geojsons={geojsons.edges} {...props} /></div>}
     />
 );
 
@@ -49,150 +73,255 @@ class MyMap extends Component {
             let base = item;
             if (item.indexOf("_bike") > -1){
                 base = item.replace("_bike", "");
-            } else if (item.indexOf("_car") > -1) {
-                type = "car";
-                base = item.replace("_car", "");
+            } else if (item.indexOf("_dedo") > -1) {
+                type = "dedo";
+                base = item.replace("_dedo", "");
             } else if (item.indexOf("_plane") > -1) {
                 type = "plane";
                 base = item.replace("_plane", "");
             }
-            geos[base] = {
-                base: base,
-                type: type
+            if (base.length > 1){
+                geos[base] = {
+                    base: base,
+                    type: type
+                }    
             }
         })
         this.urls = [];
         this.props.geojsons.forEach(item => {
             if (geos[item.node.base]){
-                this.urls.push(item.node.publicURL);
+                this.urls.push({ url: item.node.publicURL, type: geos[item.node.base].type});
             }
         })
-        this.mapLayer = createRef();
-        this.geoJsonLayer = createRef();
-        this.distancemarkers = createRef();
-    }
-
-    dist3d(a, b) { //return in meters
-        return Math.sqrt(Math.pow(this.dist2d(L.latLng(a[1], a[0]), L.latLng(b[1], b[0])), 2) + Math.pow(Math.abs(b[2] - a[2]) || 0, 2));
-    }
-
-    dist2d(a, b) {
-        const R = 6371e3;
-        let dLat = this._deg2rad(b.lat - a.lat);
-        let dLon = this._deg2rad(b.lng - a.lng);
-        let r = Math.sin(dLat / 2) *
-            Math.sin(dLat / 2) +
-            Math.cos(this._deg2rad(a.lat)) *
-            Math.cos(this._deg2rad(b.lat)) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
-        return R * (2 * Math.atan2(Math.sqrt(r), Math.sqrt(1 - r)));
-    }
-    _deg2rad(deg) {
-        return deg * Math.PI / 180;
-    }
-
-    calculateDistance(coordinates){
-        var distance = 0;
-        for (let i=1; i<coordinates.length; ++i){
-            distance += this.dist3d(coordinates[i-1], coordinates[i])
+        this.state = { distanceData: false }
+        this.map, this.bikeLayer;
+        this.setMapRef = element => {
+            this.mapRef = element;
         }
-        return distance;
+        this.legendContainer;
+        this.legendRef = createRef();
+        this.handleZoom = this.handleZoom.bind(this);
+    }
+
+    setLegend() {
+        ReactDOM.render(
+            React.createElement(Legend),
+            this.legendContainer
+        );
+    }
+
+    create_map(target){
+        this.legendContainer = document.createElement('div');
+        this.setLegend();
+        var map = new Map({
+            target: target,
+            layers: [
+                new TileLayer({
+                    source: new XYZ({
+                        url: '//{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png'
+                    })
+                })
+            ],
+            view: new View({
+                center: [0, 0],
+                zoom: 2,
+                projection: 'EPSG:4326'
+            }),
+            controls: defaultControls().extend([
+                new FullScreen(),
+                new Control({
+                    element: this.legendContainer
+                })
+            ])
+        });
+        return map;
+    }
+
+    styleFunction(feature){
+        var geometry = feature.getGeometry();
+        var styles = [
+            lineStyles['bike']['LineString']
+        ];
+        let coords = geometry.getCoordinates();
+        let start = coords[0]
+        let end = coords[coords.length - 1]
+        let dx = end[0] - start[0];
+        let dy = end[1] - start[1];
+        styles.push(new olStyle({
+            geometry: new Point(end),
+            image: new Icon({
+                src: '/static/arrow-c6bee897cd0f5c7fa2b5b3e5ff26f3a9.png',
+                anchor: [0.75, 0.5],
+                rotateWithView: true,
+                rotation: -Math.atan2(dy, dx)
+            })
+        }));
+
+        return styles;
+    }
+
+    createVectorLayer(geojson, type) {
+        let vector = new Vector()
+        geojson.forEach(item => {
+            vector.addFeatures((new GeoJSON()).readFeatures(item, { featureProjection: 'EPSG:4326' }));
+        })
+        return new VectorLayer({
+            source: vector,
+            style: lineStyles[type]['LineString']
+        })
+    }
+
+
+    countdiistance(geojson) {
+        let distance, fulldistance, timeBetween, elevation_up, elevation_down;
+        distance = fulldistance = timeBetween = elevation_up = elevation_down = 0;
+        var avg_speed = [];
+        for (let key in geojson) {
+            let coordinates = geojson[key].getGeometry().getCoordinates();
+            let coordTimes = geojson[key].get("coordTimes");
+            for (let i = 0; i < coordinates.length; ++i) {
+                if (i > 0) {
+                    var current_distance = getDistance(coordinates[i - 1], coordinates[i]);
+                    fulldistance += current_distance;
+                    if (coordTimes){
+                        distance += current_distance;
+                        let current_time = Math.floor((Date.parse(coordTimes[i]) - Date.parse(coordTimes[i - 1])));
+                        let curr_speed = current_distance / (current_time / 1000) * 3.6;
+                        if (curr_speed > 3) {
+                            var elevation_change = coordinates[i][2] - coordinates[i - 1][2];
+                            timeBetween += current_time;
+                            if (elevation_change > 0) {
+                                elevation_up += elevation_change;
+                            } else if (elevation_change < 0 && elevation_change > -50) {
+                                elevation_down += (elevation_change * -1);
+                            }
+                            avg_speed.push((distance / (timeBetween / 1000)) * 3.6);
+                        }
+                    }
+                }
+            }
+        }
+        this.setState({
+            distanceData: {
+                avgspeed: Math.round((avg_speed.reduce((a, b) => a + b, 0) / avg_speed.length) * 100) / 100,
+                distance: Math.round(fulldistance / 1000),
+                elevation_up: Math.round((elevation_up / 1000) * 100) / 100,
+                elevation_down: Math.round((elevation_down / 1000) * 100) / 100,
+                fulltime: timeBetween
+            }
+        })
+
     }
 
 
     componentDidMount() {
-        const requests = this.urls.map(url => fetch(url).then(res => res.json()));
-        const toFeatures = responses => responses.reduce((out, response) => {
-            if (!out) { return response }
-            // console.log("licze")
-            // console.log(response.features[0].geometry)
-            // console.log(isGeoJSON(response, true))
-            // console.log(toArray(response.features))
-            // out.features[0].geometry.coordinates.push(...response.features[0].geometry.coordinates)
-            // response.features[0].geometry.coordinates
-            // console.log(getDistance(response.features[0].geometry.getDistance))
-            out.features.push(...response.features);
-            return out;
-        });
-        Promise.all(requests).then(toFeatures).then(res => {
-            this.geoJsonLayer.current.leafletElement.addData(res);
-            this.mapLayer.current.leafletElement.fitBounds(this.geoJsonLayer.current.leafletElement.getBounds())
-            this.mapLayer.current.leafletElement.invalidateSize()
-            // console.log(res.features)
-            var distance = 0;
-            res.features.forEach(item => {
-                if (item.properties.coordTimes && item.properties.coordTimes.length == item.geometry.coordinates.length){
+        const mapDOMNode = ReactDOM.findDOMNode(this.mapRef);
+        this.map = this.create_map(mapDOMNode);
+        this.map.on('moveend', this.handleZoom);
 
-                }
-                distance += this.calculateDistance(item.geometry.coordinates)
-            })
-            console.log((distance/1000))
-            L.polylineDecorator(this.geoJsonLayer.current.leafletElement.getLayers().filter((e, i) => i % 2 === 0), {
-                patterns: [
-                    { offset: '60%', repeat: 0, symbol: L.Symbol.arrowHead({ pixelSize: 11, polygon: false, pathOptions: { color: 'orange', stroke: true } }) }
-                    // { offset: 0, repeat: 250, symbol: L.Symbol.arrowHead({ pixelSize: 10, pathOptions: { fillOpacity: 1, color: 'red',weight: 0 } }) }
-                ]
-            }).addTo(this.mapLayer.current.leafletElement);
+        const requests = this.urls.map(item => fetch(item.url).then(res => res.json().then(res2 => { return { type: item.type, geojson: res2}})));
+        const toFeatures = responses => responses.reduce((out, response) => {
+            out[response.type].push(...response.geojson.features.filter(x => x.geometry && x.geometry.type == "LineString"))
+            return out;
+        }, { 'bike': [], 'dedo': [], 'plane': [] } );
+        Promise.all(requests).then(toFeatures).then(res => {
+            this.bikeLayer = this.createVectorLayer(res.bike, "bike");
+            this.map.addLayer(this.createVectorLayer(res.dedo, "dedo"));
+            this.map.addLayer(this.createVectorLayer(res.plane, "plane"));
+            this.map.addLayer(this.bikeLayer);
+            this.map.getView().fit(this.bikeLayer.getSource().getExtent(), this.map.getSize());
+            this.map.getView().setZoom(2.5);
+            this.countdiistance(this.bikeLayer.getSource().getFeatures());
         })
+        return;
     }
 
-    onEachFeature(feature, layer) {
-        if (feature.properties && feature.properties.time) {
-            layer.bindPopup(feature.properties.time);
+    handleZoom(){
+        if (this.bikeLayer) {
+            if (this.map.getView().getZoom() < 6) {
+                this.bikeLayer.setStyle(lineStyles['bike']['LineString']);
+            }
+            else {
+                this.bikeLayer.setStyle(this.styleFunction);
+            }
         }
-        // console.log("shit")
-        // console.log(this.leaflet.map)
-        // const polyline = L.polyline([52.4063367, 16.8344105,], { color: 'yellow' }).addTo(this.leaflet.map);
-        // this.distancemarkers.addDistanceMarkers()
-        // L.polylineDecorator(layer, {
-        //     patterns: [
-                // {
-                //     offset: 0 + '%',
-                //     repeat: 0,
-                //     symbol: L.Symbol.marker({
-                //         rotate: true,
-                //         markerOptions: {
-                //             icon: L.icon({
-                //                 iconUrl: 'https://raw.githubusercontent.com/bbecquet/Leaflet.PolylineDecorator/master/example/icon_plane.png',
-                //                 iconAnchor: [16, 16]
-                //             })
-                //         },
-                //         pathOptions: { stroke: true }
-                //     })
-                // }
-        //         { offset: 25, repeat: 30, symbol: Leaflet.symbol.arrowHead({ pixelSize: 15, pathOptions: { fillOpacity: 1, weight: 0 } }) }
-        //     ]
-        // }).addTo(this.mapLayer);
     }
 
     render() {
-        if (typeof window !== 'undefined') {
-            const showDistanceMarkers = true
-            const positions = [[0,0]]
-            const trackColor = 'red'
-            const distanceMarkers = {
-                showAll: 13,
-                offset: 1000, // 1000 for kilometers, 1609.344 for miles
-                cssClass: showDistanceMarkers === true
-                    ? 'dist-marker'
-                    : 'dist-marker-hidden',
-                iconSize: [24, 24]
-            }
-            return (
-                <Map ref={this.mapLayer}>
-                    <TileLayer
-                        attribution='&amp;copy <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-                        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    />
-                    <GeoJSON ref={this.geoJsonLayer} onEachFeature={this.onEachFeature} />
-                    {/* <LeafletPolyline color={'red'}
-                        positions={[[45.9205, 0.4394], [45.9205, 0.9228], [45.9205, 2.5488], [45.9205, 3.3837]]} /> */}
-                    {/* <DistanceMarkers ref={this.distancemarkers} /> */}
+        const styles = { height: '100%', width: '100%' }
+        return (
+            <>
+                <div style={styles} className="ol">
+                    <div style={styles} ref={this.setMapRef}></div>
+                </div>
+                <DistanceData distanceData={this.state.distanceData} />
+            </>
+        );
+    }
+}
 
-                </Map>
-            );
+function DistanceData(props) {
+    const distanceData = props.distanceData;
+    const trs = useTranslations();
+    const time = timeConversion(distanceData.fulltime)
+    const timespan = <>{time.data} <span>{trs[time.units]}</span></>;
+    if (distanceData) {
+        return (<div className="map-stat-grid">
+                    <div className="map-grid-element">
+                            <div className="map-grid-element-data">{Math.round(distanceData.distance * 100) / 100} <span>km</span></div>
+                <div className="map-grid-element-data map-grid-element-info">{trs.distance} <FaRuler /></div>
+                <div className="map-grid-element-data">{Math.round(distanceData.distance * 0.6)} <span>mi</span></div>
+                    </div>
+                    <div className="map-grid-element">
+                <div className="map-grid-element-data">{timespan}</div>
+                <div className="map-grid-element-data map-grid-element-info">{trs.saddletime} <IoIosTimer /></div>
+                <div className="map-grid-element-data"></div>
+                    </div>
+                    <div className="map-grid-element">
+                <div className="map-grid-element-data">{distanceData.avgspeed} <span>{trs.kmh}</span></div>
+                <div className="map-grid-element-data map-grid-element-info">{trs.avgspeed}</div>
+                <div className="map-grid-element-data">{Math.round(distanceData.avgspeed * 0.6)} <span>{trs.mph}</span></div>    
+                    </div>
+                    <div className="map-grid-element">
+                            <div className="map-grid-element-data">{distanceData.elevation_up} <span>km</span></div>
+                <div className="map-grid-element-data map-grid-element-info">{trs.elevation_up} <IoMdTrendingUp/></div>
+                            <div className="map-grid-element-data">{Math.round(distanceData.elevation_up * 0.6)} <span>mi</span></div>
+                    </div>
+            <div className="map-grid-element">
+                <div className="map-grid-element-data">{distanceData.elevation_down} <span>km</span></div>
+                <div className="map-grid-element-data map-grid-element-info">{trs.elevation_down} <IoMdTrendingDown /></div>
+                <div className="map-grid-element-data">{Math.round(distanceData.elevation_down * 0.6)} <span>mi</span></div>
+            </div>
+                </div>)
+    }
+    return <></>;
+}
+
+class Legend extends Component {
+    render() {
+        return (<div className="legend ol-unselectable ol-control">
+            <div className="legend-item bicycle"><IoIosBicycle /></div>
+            <div className="legend-item plane"><IoIosAirplane /></div>
+            <div className="legend-item dedo"><IoMdBus /></div>
+        </div>)
+    }
+}
+
+function timeConversion(millisec) {
+    var seconds = (millisec / 1000).toFixed(0);
+    var minutes = (millisec / (1000 * 60)).toFixed(0);
+    var hours = (millisec / (1000 * 60 * 60)).toFixed(0);
+    var days = (millisec / (1000 * 60 * 60 * 24)).toFixed(0);
+    if (seconds < 60) {
+        return seconds + " Sec";
+    } else if (minutes < 60) {
+        return minutes + " Min";
+    } else if (hours < 24) {
+        return hours + " Hrs";
+    } else {
+        return {
+            data: days,
+            units: 'days'
         }
-        return null;
     }
 }

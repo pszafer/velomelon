@@ -6,6 +6,7 @@ import { LocaleContext } from "./layout"
 import useTranslations from "./useTranslations"
 import BackgroundImage from 'gatsby-background-image'
 import Img from 'gatsby-image'
+import { IoIosHome, IoMdGlobe, IoMdGrid } from 'react-icons/io'
 
 
 function Header({title, description }) {
@@ -61,27 +62,35 @@ const BackgroundHeader = ({ children, className, background }) => {
 }
 
 function Nav( {isHome, title, headerData }) {
-  const { backToHome, polish, english, aboutUs } = useTranslations()
+  const { home, polish, english, map, map_description, tags } = useTranslations()
   const { localeInfo } = React.useContext(LocaleContext)
   const lang = localeInfo.locale
   let logo = isHome ? "" : (<Logo className="site-nav-logo" alt={title} logoType="fluid" logo={headerData.logo600.childImageSharp.fluid} />)
+  const menuData = [
+    { to: '/', alt: home, text: home, icon: <IoIosHome /> },
+    { to: 'america-map', alt: map_description, text: map, icon: <IoMdGlobe /> },
+    { to: 'tags', alt: tags, text: tags, icon: <IoMdGrid /> }
+  ]
   return(<nav className="site-nav">
           <div className="site-nav-left">
-            <LocalizedLink to="/" aria-label={backToHome}>
+            <LocalizedLink to="/" aria-label={home}>
               {logo} 
             </LocalizedLink>
             <ul className="nav" role="menu">
-              <li className="nav-home nav-current" role="menuitem">
-                
+              {menuData.map((item) => (
+                <li key={item} className={"nav-item " + isCurrent(item.to, localeInfo.slug)} role="menuitem">
+                  <LocalizedLink to={"/" + item.to} aria-label={item.alt} alt={item.alt}>{item.icon} {item.text}</LocalizedLink>
+                </li>
+              ))}
+              {/* <li className={"nav-item " + isCurrent("/", localeInfo.slug)} role="menuitem">
+                  <LocalizedLink to="/" aria-label={home}>{home}</LocalizedLink>
               </li>
-              {/* <li className="nav-about" role="menuitem"><a href="https://demo.ghost.io/about/">{aboutUs}</a></li>
-              <li className="nav-getting-started" role="menuitem"><a href="https://demo.ghost.io/tag/getting-started/">Getting Started</a></li> */}
-              <li className="nav-try-ghost" role="menuitem">
-               
-        </li>
-              <li className="nav-try-ghost" role="menuitem">
-                
+              <li role="menuitem" className={"nav-item " + isCurrent("america-map", localeInfo.slug)}>
+                  <LocalizedLink to="/america-map" aria-label={map_description} alt={map_description}>{map}</LocalizedLink>
               </li>
+              <li role="menuitem" className={"nav-item " + isCurrent("tags", localeInfo.slug)}>
+                <LocalizedLink to="/tags" aria-label={tags} alt={tags}>{tags}</LocalizedLink>
+              </li> */}
             </ul>
           </div>
           <div className="site-nav-right">
@@ -106,6 +115,15 @@ function Nav( {isHome, title, headerData }) {
       </ul>
           </div>
         </nav>)
+}
+
+function isCurrent(to, current){
+  current = current.replace(/\//g, '');
+  to = to.replace(/\//g, '');
+  console.log("sprawdzam")
+  console.log(to)
+  console.log(current)
+  return to == current ? 'nav-current' : '';
 }
 
 const Logo = ({ className, alt, logoType, logo }) => {

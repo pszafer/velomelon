@@ -5,7 +5,7 @@ import LocalizedLink from "../components/localizedLink"
 import useTranslations from "../components/useTranslations"
 import Img from 'gatsby-image'
 
-const Tags = ({ data: { allMdx, rawData }, pageContext }) => {
+const TagList = ({ data: { allMdx, rawData }, pageContext }) => {
     return (
         <div className="site-wrapper">
             <Header
@@ -23,7 +23,9 @@ const Tags = ({ data: { allMdx, rawData }, pageContext }) => {
                                 <div className="post-card-content">
                                     <LocalizedLink alt={post.frontmatter.title} className="post-card-content-link" to={`/${post.parent.relativeDirectory}`}>
                                         <header className="post-card-header">
-                                            <span className="post-card-tags">TAGS</span>
+                                          <span className="post-card-tags">
+                                            {post.frontmatter.tags.join(', ')}
+                                          </span>
                                             <h2 className="post-card-title">{post.frontmatter.title}</h2>
                                         </header>
                                         <section className="post-card-excerpt">
@@ -40,10 +42,10 @@ const Tags = ({ data: { allMdx, rawData }, pageContext }) => {
     )
 }
 
-export default Tags
+export default TagList
 
 export const query = graphql`
-  query Tags($locale: String!, $dateFormat: String!, $tag: String!) {
+  query TagList($locale: String!, $dateFormat: String!, $tag: String!) {
     rawData: allFile(filter: { sourceInstanceName: { eq: "translations" } }) 
     {
         edges {
@@ -70,6 +72,7 @@ export const query = graphql`
         node {
           frontmatter {
             title
+            tags
             caption {
               childImageSharp {
                 fluid(quality: 90, maxWidth: 700) {

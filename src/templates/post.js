@@ -21,9 +21,6 @@ class Post extends React.Component {
     const { data: { mdx }, pageContext } = this.props;
     const components = {
       a: ({ children, ...props }) => {
-        // if (props.className == "gatsby-resp-image-link"){
-        //   return <MdxImg>{children}</MdxImg>
-        // }
         return <MdxLink {...props} />
       },
       gpx: ({ children }) => {
@@ -36,9 +33,6 @@ class Post extends React.Component {
       wrapper: ({ children, ...props }) => {
         return <>{children}</>
       }
-      // img: MdxImg
-      // ".gatsby-resp-image-wrapper": MdxImg
-      // span: MdxImg
     }
     return (
       <div className="site-wrapper">

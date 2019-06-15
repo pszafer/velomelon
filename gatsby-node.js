@@ -59,7 +59,7 @@ exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
 
   const postTemplate = require.resolve(`./src/templates/post.js`)
-  const tagTemplate = require.resolve(`./src/templates/tags.js`)
+  const tagTemplate = require.resolve(`./src/templates/taglist.js`)
 
   const result = await graphql(`
     {
