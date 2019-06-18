@@ -2,7 +2,7 @@ import React from "react"
 import { graphql } from "gatsby"
 import { Header } from "../components/header"
 import LocalizedLink from "../components/localizedLink"
-import useTranslations from "../components/useTranslations"
+import getTagTranslation from "../utils/getTagTranslation"
 import Img from 'gatsby-image'
 
 const TagList = ({ data: { allMdx, rawData }, pageContext }) => {
@@ -24,7 +24,10 @@ const TagList = ({ data: { allMdx, rawData }, pageContext }) => {
                                     <LocalizedLink alt={post.frontmatter.title} className="post-card-content-link" to={`/${post.parent.relativeDirectory}`}>
                                         <header className="post-card-header">
                                           <span className="post-card-tags">
-                                            {post.frontmatter.tags.join(', ')}
+                                            {post.frontmatter.tags.map((tag, index) => (
+                                              getTagTranslation(tag, pageContext.locale, index, post.frontmatter.tags.length)
+                                            ))}
+                                            {/* {post.frontmatter.tags.join(', ')} */}
                                           </span>
                                             <h2 className="post-card-title">{post.frontmatter.title}</h2>
                                         </header>

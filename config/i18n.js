@@ -16,7 +16,10 @@ module.exports = {
     memories: "memories",
     bike: "Bike",
     usa: "USA",
-    preparation: "Preparation"
+    preparation: "Preparation",
+    florida: "Florida",
+    virginia: "Virginia",
+    southamerica: "South America"
   },
   pl: {
     path: `pl`,
@@ -32,6 +35,9 @@ module.exports = {
     memories: "Wspomnienia",
     bike: "Rower",
     usa: "USA",
-    preparation: "Przygotowanie"
+    preparation: "Przygotowanie",
+    florida: "Floryda",
+    virginia: "Wirginia",
+    southamerica: "Ameryka Płd"
   },
 }

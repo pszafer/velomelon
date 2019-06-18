@@ -12,4 +12,9 @@ function isHome(slug) {
     return false;
 }
 
-export { getLocale, isHome };
+function getTranslation(tag, locale) {
+    let translations = getLocale(locale);
+    return translations[tag] ? translations[tag] : tag;
+}
+
+export { getLocale, isHome, getTranslation };

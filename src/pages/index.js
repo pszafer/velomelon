@@ -2,19 +2,11 @@ import React from "react"
 import { graphql } from "gatsby"
 import { Header } from "../components/header"
 import LocalizedLink from "../components/localizedLink"
-import useTranslations from "../components/useTranslations"
 import Img from 'gatsby-image'
+import getTagTranslation from "../utils/getTagTranslation"
+
 
 const Index = ({ data: { allMdx }, pageContext }) => {
-  // useTranslations is aware of the global context (and therefore also "locale")
-  // so it'll automatically give back the right translations
-  const { hello, subline } = useTranslations()
-  allMdx.edges.map(({ node: post }) => {
-    if (!post.frontmatter.caption){
-      console.log("dupa")
-      console.log(post);
-    }
-  })
   return (
     <div className="site-wrapper">
       <Header
@@ -33,7 +25,10 @@ const Index = ({ data: { allMdx }, pageContext }) => {
                   <LocalizedLink alt={post.frontmatter.title} className="post-card-content-link" to={`/${post.parent.relativeDirectory}`}>
                     <header className="post-card-header">
                       <span className="post-card-tags">
-                        {post.frontmatter.tags.join(', ')}
+                        {post.frontmatter.tags.map((tag, index) => (
+                          getTagTranslation(tag, pageContext.locale, index, post.frontmatter.tags.length)
+                        ))}
+                        {/* {post.frontmatter.tags.join(', ')} */}
                       </span>
                       <h2 className="post-card-title">{post.frontmatter.title}</h2>
                     </header>
@@ -49,12 +44,6 @@ const Index = ({ data: { allMdx }, pageContext }) => {
       </main>
     </div>
   )
-}
-
-function logPost(post){
-  if (!post.frontmatter.caption){
-    console.log(post)
-  }
 }
 
 export default Index

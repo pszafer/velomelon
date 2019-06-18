@@ -10,6 +10,8 @@ import MdxMap from "../components/mdx/mdxMap"
 import MdxSphere from "../components/mdx/mdxSphere"
 import Readmore from '../components/readmore'
 import ReadProgressLine from '../components/progress'
+import { getTranslation } from "../utils/shared"
+import LocalizedLink from "../components/localizedLink"
 import Img from 'gatsby-image'
 
 class Post extends React.Component {
@@ -59,8 +61,8 @@ class Post extends React.Component {
                   <time className="post-full-meta-date" dateTime={mdx.frontmatter.dateShort}>{mdx.frontmatter.dateFull}</time>
                   <span className="date-divider">/</span>
                   <ul className="tags">
-                    {mdx.frontmatter.tags.map(tag => (
-                      <li key={tag}><a href={`/tag/${tag}`}>{tag}</a></li>
+                    {mdx.frontmatter.tags.map((tag, index) => (
+                      <li key={tag}><LocalizedLink to={"/tag/" + tag}>{ getTranslation(tag, pageContext.locale)}</LocalizedLink></li>
                     ))}
                   </ul>
                 </section>

@@ -2,49 +2,32 @@ import React, { createRef, Component } from 'react'
 import ReactDOM from 'react-dom';
 
 import { StaticQuery, graphql } from "gatsby"
-import Map from 'ol/Map';
-import View from 'ol/View';
-import XYZ from 'ol/source/XYZ'
-import Point from 'ol/geom/Point.js';
-import Vector from 'ol/source/Vector';
-import TileLayer from 'ol/layer/Tile';
-import VectorLayer from 'ol/layer/Vector';
-import GeoJSON from 'ol/format/GeoJSON';
+
+// import ol from 'ol';
+// const OL = require('ol');
+
 import { getDistance } from 'ol/sphere'
-import { Stroke, Style as olStyle, Icon } from "ol/style";
-import { defaults as defaultControls, FullScreen, Control } from 'ol/control';
 import { IoIosBicycle, IoIosAirplane, IoMdBus, IoMdTrendingUp, IoMdTrendingDown, IoIosTimer } from 'react-icons/io'
 import { FaRuler } from 'react-icons/fa'
 import useTranslations from "../useTranslations"
 
-import "ol/ol.css"
+// let Map, TileLayer, VectorLayer, XYZ, Vector, View, olStyle,  Point;
+// let GeoJSON, FullScreen, Control, defaultControls, getDistance;
 
-var lineStyles = {
-    'dedo': {
-        'LineString': new olStyle({
-            stroke: new Stroke({
-                color: 'blue',
-                width: 1
-            })
-        })
-    },
-    'bike': {
-        'LineString': new olStyle({
-            stroke: new Stroke({
-                color: 'red',
-                width: 2
-            })
-        })
-    },
-    'plane': {
-        'LineString': new olStyle({
-            stroke: new Stroke({
-                color: 'yellow',
-                width: 0.5
-            })
-        })
-    }
-};
+
+let ol, olStyle, olLayer, olSource, olGeom, olFormat, olControl, defaultControls;
+
+
+// const control = require('ol/control');
+// const FullScreen = control.FullScreen;
+// const Control = control.Control
+// const defaultControls = control.defaults;
+
+//ol.proj
+// const ol_Proj = require('ol/proj').default;
+
+
+import "ol/ol.css"
 
 export default props => (
     <StaticQuery
@@ -87,6 +70,7 @@ class MyMap extends Component {
                 }    
             }
         })
+        this.lineStyles;
         this.urls = [];
         this.props.geojsons.forEach(item => {
             if (geos[item.node.base]){
@@ -98,6 +82,7 @@ class MyMap extends Component {
         this.setMapRef = element => {
             this.mapRef = element;
         }
+        this.ol;
         this.legendContainer;
         this.legendRef = createRef();
         this.handleZoom = this.handleZoom.bind(this);
@@ -113,43 +98,44 @@ class MyMap extends Component {
     create_map(target){
         this.legendContainer = document.createElement('div');
         this.setLegend();
-        var map = new Map({
+        var map = new ol.Map({
             target: target,
             layers: [
-                new TileLayer({
-                    source: new XYZ({
+                new olLayer.Tile({
+                    source: new olSource.XYZ({
                         url: '//{a-c}.tile.opentopomap.org/{z}/{x}/{y}.png'
                     })
                 })
             ],
-            view: new View({
+            view: new ol.View({
                 center: [0, 0],
                 zoom: 2,
                 projection: 'EPSG:4326'
             }),
             controls: defaultControls().extend([
-                new FullScreen(),
-                new Control({
+                new  olControl.FullScreen(),
+                new olControl.Control({
                     element: this.legendContainer
                 })
             ])
         });
+        console.log("za mapa")
         return map;
     }
 
     styleFunction(feature){
         var geometry = feature.getGeometry();
         var styles = [
-            lineStyles['bike']['LineString']
+            this.lineStyles['bike']['LineString']
         ];
         let coords = geometry.getCoordinates();
         let start = coords[0]
         let end = coords[coords.length - 1]
         let dx = end[0] - start[0];
         let dy = end[1] - start[1];
-        styles.push(new olStyle({
-            geometry: new Point(end),
-            image: new Icon({
+        styles.push(new olStyle.Style({
+            geometry: new olGeom.Point(end),
+            image: new olStyle.Icon({
                 src: '/static/arrow-c6bee897cd0f5c7fa2b5b3e5ff26f3a9.png',
                 anchor: [0.75, 0.5],
                 rotateWithView: true,
@@ -161,13 +147,13 @@ class MyMap extends Component {
     }
 
     createVectorLayer(geojson, type) {
-        let vector = new Vector()
+        let vector = new olSource.Vector()
         geojson.forEach(item => {
-            vector.addFeatures((new GeoJSON()).readFeatures(item, { featureProjection: 'EPSG:4326' }));
+            vector.addFeatures((new olFormat.GeoJSON()).readFeatures(item, { featureProjection: 'EPSG:4326' }));
         })
-        return new VectorLayer({
+        return new olLayer.Vector({
             source: vector,
-            style: lineStyles[type]['LineString']
+            style: this.lineStyles[type]['LineString']
         })
     }
 
@@ -215,6 +201,55 @@ class MyMap extends Component {
 
 
     componentDidMount() {
+
+        ol = require('ol');
+        olStyle = require('ol/style');
+        olLayer = require('ol/layer');
+        olSource = require('ol/source');
+        olGeom = require('ol/geom');
+        olFormat = require('ol/format');
+        olControl = require('ol/control');
+        defaultControls = olControl.defaults;
+
+        console.log(olStyle);
+        this.lineStyles = {
+            'dedo': {
+                'LineString': new olStyle.Style({
+                    stroke: new olStyle.Stroke({
+                        color: 'blue',
+                        width: 1
+                    })
+                })
+            },
+            'bike': {
+                'LineString': new olStyle.Style({
+                    stroke: new olStyle.Stroke({
+                        color: 'red',
+                        width: 2
+                    })
+                })
+            },
+            'plane': {
+                'LineString': new olStyle.Style({
+                    stroke: new olStyle.Stroke({
+                        color: 'yellow',
+                        width: 0.5
+                    })
+                })
+            }
+        };
+        // View = require('ol/View').default;
+        // TileLayer = require('ol/layer/Tile').default;
+        // VectorLayer = require('ol/layer/Vector').default;
+        // XYZ = require('ol/source/XYZ').default;
+        // Vector = require('ol/source/Vector').default;
+        // Point = require('ol/geom/Point').default;
+        // GeoJSON = require('ol/format/GeoJSON').default;
+        // olStyle = require('ol/style').default;
+        // Stroke = require('ol/style/Stroke').default;
+        // Icon = require('ol/style/Icon').default;
+
+
         const mapDOMNode = ReactDOM.findDOMNode(this.mapRef);
         this.map = this.create_map(mapDOMNode);
         this.map.on('moveend', this.handleZoom);
@@ -233,13 +268,12 @@ class MyMap extends Component {
             this.map.getView().setZoom(2.5);
             this.countdiistance(this.bikeLayer.getSource().getFeatures());
         })
-        return;
     }
 
     handleZoom(){
         if (this.bikeLayer) {
             if (this.map.getView().getZoom() < 6) {
-                this.bikeLayer.setStyle(lineStyles['bike']['LineString']);
+                this.bikeLayer.setStyle(this.lineStyles['bike']['LineString']);
             }
             else {
                 this.bikeLayer.setStyle(this.styleFunction);
@@ -248,15 +282,18 @@ class MyMap extends Component {
     }
 
     render() {
-        const styles = { height: '100%', width: '100%' }
-        return (
-            <>
-                <div style={styles} className="ol">
-                    <div style={styles} ref={this.setMapRef}></div>
-                </div>
-                <DistanceData distanceData={this.state.distanceData} />
-            </>
-        );
+        if (typeof window !== 'undefined') {
+            const styles = { height: '100%', width: '100%' }
+            return (
+                <>
+                    <div style={styles} className="ol">
+                        <div style={styles} ref={this.setMapRef}></div>
+                    </div>
+                    <DistanceData distanceData={this.state.distanceData} />
+                </>
+            );
+        }
+        return null;
     }
 }
 

@@ -4,12 +4,11 @@ import { Header } from "../components/header"
 import LocalizedLink from "../components/localizedLink"
 import useTranslations from "../components/useTranslations"
 import BackgroundImage from 'gatsby-background-image'
+import { getTranslation } from "../utils/shared"
 
 const Tags = ({ data: { allMdx, captionTag }, pageContext }) => {
-    // useTranslations is aware of the global context (and therefore also "locale")
-    // so it'll automatically give back the right translations
-    const { tags } = useTranslations()
-    var tagHash = {};
+  const { tags } = useTranslations()
+  var tagHash = {};
   allMdx.edges.map(({ node: post }) => post.frontmatter.tags.forEach(x => tagHash[x] = tagHash[x] ? tagHash[x] + 1 : 1))
   const tagList = Object.keys(tagHash)
     return (
@@ -41,7 +40,7 @@ const Tags = ({ data: { allMdx, captionTag }, pageContext }) => {
                                     {(tagList.map(x =>
                                         <li key={x}>
                                             <span className={"post-card-tags tagcloud " + determineCssClass(tagHash[x])  }>
-                                                <LocalizedLink to={"/tag/"+x}>{x}</LocalizedLink>
+                                              <LocalizedLink to={"/tag/" + x}>{getTranslation(x, pageContext.locale)}</LocalizedLink>
                                             </span>
                                         </li>
                                     ))}

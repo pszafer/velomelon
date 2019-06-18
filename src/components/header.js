@@ -7,6 +7,7 @@ import useTranslations from "./useTranslations"
 import BackgroundImage from 'gatsby-background-image'
 import Img from 'gatsby-image'
 import { IoIosHome, IoMdGlobe, IoMdGrid } from 'react-icons/io'
+import { FaFacebook } from "react-icons/fa"
 
 
 function Header({title, description }) {
@@ -77,8 +78,8 @@ function Nav( {isHome, title, headerData }) {
               {logo} 
             </LocalizedLink>
             <ul className="nav" role="menu">
-              {menuData.map((item) => (
-                <li key={item} className={"nav-item " + isCurrent(item.to, localeInfo.slug)} role="menuitem">
+              {menuData.map((item, index) => (
+                <li key={item.to+index} className={"nav-item " + isCurrent(item.to, localeInfo.slug)} role="menuitem">
                   <LocalizedLink to={"/" + item.to} aria-label={item.alt} alt={item.alt}>{item.icon} {item.text}</LocalizedLink>
                 </li>
               ))}
@@ -96,22 +97,17 @@ function Nav( {isHome, title, headerData }) {
           <div className="site-nav-right">
       <ul className="nav lang">
             <li>
-      
-       <Flag
-          country="en"
-          text={english}
-          lang={lang}
-          flag={headerData.enFlag.childImageSharp.fixed}
-              to={'/' + localeInfo.slug} />
-        </li>
-        <li>
-        <Flag
-          country="pl"
-          text={polish}
-          lang={lang}
-          flag={headerData.plFlag.childImageSharp.fixed}
-              to={'/pl/' + localeInfo.slug} />
+              <Link to="https://facebook.com/velomelon" hrefLang={lang}>
+                <FaFacebook />
+              </Link>
             </li>
+            <li>
+              <Flag country="en" text={english} lang={lang} flag={headerData.enFlag.childImageSharp.fixed} to={'/' + localeInfo.slug} />
+            </li>
+            <li>
+              <Flag country="pl" text={polish} lang={lang} flag={headerData.plFlag.childImageSharp.fixed} to={'/pl/' + localeInfo.slug} />
+            </li>
+            
       </ul>
           </div>
         </nav>)
