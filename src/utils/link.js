@@ -7,7 +7,7 @@ const Link = (props) => {
         return <GatsbyLink {...props}>{props.children}</GatsbyLink>;
     }
     return (
-        <a target="_blank" {...props}  rel="noopener noreferrer">{props.children}</a>
+        <a target="_blank" href={props.to} {...props}  rel="noopener noreferrer">{props.children}</a>
     );
 }
 

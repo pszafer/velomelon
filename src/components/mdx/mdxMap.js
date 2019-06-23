@@ -86,6 +86,7 @@ class MyMap extends Component {
         this.legendContainer;
         this.legendRef = createRef();
         this.handleZoom = this.handleZoom.bind(this);
+        this.styleFunction = this.styleFunction.bind(this);
     }
 
     setLegend() {
@@ -211,7 +212,6 @@ class MyMap extends Component {
         olControl = require('ol/control');
         defaultControls = olControl.defaults;
 
-        console.log(olStyle);
         this.lineStyles = {
             'dedo': {
                 'LineString': new olStyle.Style({
@@ -238,17 +238,6 @@ class MyMap extends Component {
                 })
             }
         };
-        // View = require('ol/View').default;
-        // TileLayer = require('ol/layer/Tile').default;
-        // VectorLayer = require('ol/layer/Vector').default;
-        // XYZ = require('ol/source/XYZ').default;
-        // Vector = require('ol/source/Vector').default;
-        // Point = require('ol/geom/Point').default;
-        // GeoJSON = require('ol/format/GeoJSON').default;
-        // olStyle = require('ol/style').default;
-        // Stroke = require('ol/style/Stroke').default;
-        // Icon = require('ol/style/Icon').default;
-
 
         const mapDOMNode = ReactDOM.findDOMNode(this.mapRef);
         this.map = this.create_map(mapDOMNode);
@@ -273,6 +262,7 @@ class MyMap extends Component {
     handleZoom(){
         if (this.bikeLayer) {
             if (this.map.getView().getZoom() < 6) {
+                console.log(this)
                 this.bikeLayer.setStyle(this.lineStyles['bike']['LineString']);
             }
             else {
@@ -345,6 +335,7 @@ class Legend extends Component {
 }
 
 function timeConversion(millisec) {
+    console.log("MILISEC", millisec)
     var seconds = (millisec / 1000).toFixed(0);
     var minutes = (millisec / (1000 * 60)).toFixed(0);
     var hours = (millisec / (1000 * 60 * 60)).toFixed(0);
@@ -354,7 +345,10 @@ function timeConversion(millisec) {
     } else if (minutes < 60) {
         return minutes + " Min";
     } else if (hours < 24) {
-        return hours + " Hrs";
+        return {
+            data: hours,
+            units: "hours"
+        }
     } else {
         return {
             data: days,

@@ -7,7 +7,7 @@ import useTranslations from "./useTranslations"
 import BackgroundImage from 'gatsby-background-image'
 import Img from 'gatsby-image'
 import { IoIosHome, IoMdGlobe, IoMdGrid } from 'react-icons/io'
-import { FaFacebook } from "react-icons/fa"
+import { FaFacebook, FaYoutube } from "react-icons/fa"
 
 
 function Header({title, description }) {
@@ -83,21 +83,17 @@ function Nav( {isHome, title, headerData }) {
                   <LocalizedLink to={"/" + item.to} aria-label={item.alt} alt={item.alt}>{item.icon} {item.text}</LocalizedLink>
                 </li>
               ))}
-              {/* <li className={"nav-item " + isCurrent("/", localeInfo.slug)} role="menuitem">
-                  <LocalizedLink to="/" aria-label={home}>{home}</LocalizedLink>
-              </li>
-              <li role="menuitem" className={"nav-item " + isCurrent("america-map", localeInfo.slug)}>
-                  <LocalizedLink to="/america-map" aria-label={map_description} alt={map_description}>{map}</LocalizedLink>
-              </li>
-              <li role="menuitem" className={"nav-item " + isCurrent("tags", localeInfo.slug)}>
-                <LocalizedLink to="/tags" aria-label={tags} alt={tags}>{tags}</LocalizedLink>
-              </li> */}
             </ul>
           </div>
           <div className="site-nav-right">
       <ul className="nav lang">
             <li>
-              <Link to="https://facebook.com/velomelon" hrefLang={lang}>
+              <Link className="fa-icon youtube" to="https://youtube.com/velomelon">
+                <FaYoutube />
+              </Link>
+            </li>
+            <li>
+              <Link className="fa-icon facebook" to="https://facebook.com/velomelon" hrefLang={lang}>
                 <FaFacebook />
               </Link>
             </li>
@@ -116,9 +112,6 @@ function Nav( {isHome, title, headerData }) {
 function isCurrent(to, current){
   current = current.replace(/\//g, '');
   to = to.replace(/\//g, '');
-  console.log("sprawdzam")
-  console.log(to)
-  console.log(current)
   return to == current ? 'nav-current' : '';
 }
 
@@ -139,9 +132,15 @@ const Logo = ({ className, alt, logoType, logo }) => {
 const Flag = ({country, text, lang, to, flag }) => {
   const className = country == lang ? "active-lang" : "";
   return (
-    <Link className={className} to={to} hrefLang={country}>
+    <Link className={className} to={to} hrefLang={country} onClick={() => { clickFlagLink(country) }}>
       <Img fixed={flag} alt={text}/>
     </Link>)
+}
+
+function clickFlagLink(lang){
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem('language', lang)
+  }
 }
 
 export { Header, Logo };

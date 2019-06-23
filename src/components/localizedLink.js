@@ -3,7 +3,6 @@ import Link from "../utils/link"
 import { LocaleContext } from "./layout"
 import locales from "../../config/i18n"
 
-// Use the globally available context to choose the right path
 const LocalizedLink = ({ to, ...props }) => {
   const { localeInfo } = React.useContext(LocaleContext)
   

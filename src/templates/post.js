@@ -23,7 +23,7 @@ class Post extends React.Component {
     const { data: { mdx }, pageContext } = this.props;
     const components = {
       a: ({ children, ...props }) => {
-        return <MdxLink {...props} />
+        return <MdxLink {...props}>{children}</MdxLink>
       },
       gpx: ({ children }) => {
         return <MdxMap url={this.props.location.href} >{children}</MdxMap>
@@ -48,9 +48,7 @@ class Post extends React.Component {
             title=""
             fluid={mdx.frontmatter.caption.childImageSharp.fluid}
             style={{
-              // Defaults are overwrite-able by setting one or each of the following:
               width: '100%',
-              // height: '100%',
               position: 'absolute'
             }}
           />
@@ -94,8 +92,6 @@ class Post extends React.Component {
 }
 
 export default Post
-// export default withMDXScope(Post);
-
 
 export const query = graphql`
   query Post($locale: String!, $title: String!,  $dateFormat: String!) {

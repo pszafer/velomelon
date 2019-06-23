@@ -10,9 +10,7 @@ exports.onCreatePage = ({ page, actions }) => {
   const { createPage, deletePage } = actions
   deletePage(page)
   Object.keys(locales).map(lang => {
-    const localizedPath = locales[lang].default
-      ? page.path
-      : `${locales[lang].path}${page.path}`
+    const localizedPath = locales[lang].default ? page.path : `${locales[lang].path}${page.path}`
 
     return createPage({
       ...page,
@@ -28,23 +26,11 @@ exports.onCreatePage = ({ page, actions }) => {
   })
 }
 
-// As you don't want to manually add the correct languge to the frontmatter of each file
-// a new node is created automatically with the filename
-// It's necessary to do that -- otherwise you couldn't filter by language
 exports.onCreateNode = ({ node, actions }) => {
   const { createNodeField } = actions
-
-  // Check for "Mdx" type so that other files (e.g. images) are exluded
   if (node.internal.type === `Mdx`) {
-    // Use path.basename
-    // https://nodejs.org/api/path.html#path_path_basename_path_ext
     const name = path.basename(node.fileAbsolutePath, `.mdx`)
-
-    // Check if post.name is "index" -- because that's the file for default language
-    // (In this case "en")
     const isDefault = name === `index`
-
-    // Find the key that has "default: true" set (in this case it returns "en")
     const defaultKey = findKey(locales, o => o.default === true)
     const lang = isDefault ? defaultKey : name.split(`.`)[1]
     const hidden = node.frontmatter.hidden ? true : false
@@ -57,10 +43,8 @@ exports.onCreateNode = ({ node, actions }) => {
 
 exports.createPages = async ({ graphql, actions }) => {
   const { createPage } = actions
-
   const postTemplate = require.resolve(`./src/templates/post.js`)
   const tagTemplate = require.resolve(`./src/templates/taglist.js`)
-
   const result = await graphql(`
     {
       blog: allFile(filter: { sourceInstanceName: { eq: "blog" }  extension:{ eq:"mdx"} }) {
@@ -71,6 +55,7 @@ exports.createPages = async ({ graphql, actions }) => {
               fields {
                 locale
                 isDefault
+                isHidden
                 dateFormat
               }
               frontmatter {
@@ -130,7 +115,7 @@ exports.createPages = async ({ graphql, actions }) => {
     title = post.childMdx.frontmatter.title
     let _prev, _next = null;
     for (let i=index-1; i>0; --i){
-      if (posts[i] && posts[i].node.childMdx.fields.locale == locale){
+      if (posts[i] && posts[i].node.childMdx.fields.locale == locale && !posts[i].node.childMdx.fields){
         _prev = {
           slug: '/' + posts[i].node.relativeDirectory,
           title: posts[i].node.childMdx.frontmatter.title
@@ -139,7 +124,7 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
     for (let i = index + 1; i < posts.length; ++i) {
-      if (posts[i] && posts[i].node.childMdx.fields.locale == locale) {
+      if (posts[i] && posts[i].node.childMdx.fields.locale == locale && !posts[i].node.childMdx.fields) {
         _next = {
           slug: '/' + posts[i].node.relativeDirectory,
           title: posts[i].node.childMdx.frontmatter.title
@@ -164,8 +149,4 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   })
-}
-
-function findPrevious(){
-
 }

@@ -2,10 +2,6 @@ import React from "react"
 import LocalizedLink from "../components/localizedLink"
 import useTranslations from "./useTranslations"
 import { Logo } from "./header"
-import Img from 'gatsby-image'
-import Link from "../utils/link"
-import { LocaleContext } from "./layout"
-import { getLocale } from "../utils/shared"
 import ScrollProgress from 'scrollprogress'
 
 export default class ReadProgressLine extends React.Component {

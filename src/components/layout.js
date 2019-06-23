@@ -1,6 +1,7 @@
 import React from "react"
 import SEO from "./seo"
 import { isHome } from "../utils/shared"
+import Redirect from "./redirect";
 
 
 const LocaleContext = React.createContext()
@@ -20,8 +21,6 @@ class Layout extends React.Component {
       dateFormat: pageContext.dateFormat,
       siteTitle: pageContext.title
     }
-    // let title =q
-    // const posts = home ? 
     return (
       <LocaleContext.Provider value={{ localeInfo }}>
         <SEO
@@ -30,14 +29,15 @@ class Layout extends React.Component {
           lang={pageContext.locale}
           keywords={[`blog`, `velomelon`, `travel`, `bicycle`]}
         />
-        <div id="mainDiv" className={classes}>
-          {children}
-        </div>
+        <Redirect localeInfo={localeInfo}>
+          <div id="mainDiv" className={classes}>
+            {children}
+          </div>
+        </Redirect>
       </LocaleContext.Provider>
     )
   }
 }
-
 
 
 export { Layout, LocaleContext }

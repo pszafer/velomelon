@@ -500,3 +500,17 @@
 .nav-item svg {
     vertical-align: text-top;
 }
+
+.fa-icon svg {
+    width: 30px; height: 25px;
+}
+
+.facebook:hover {
+    color: #3578e5;
+    opacity: 1;
+}
+
+.youtube:hover {
+    color: #d02525;
+    opacity: 1;
+}

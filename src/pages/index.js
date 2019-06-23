@@ -28,7 +28,6 @@ const Index = ({ data: { allMdx }, pageContext }) => {
                         {post.frontmatter.tags.map((tag, index) => (
                           getTagTranslation(tag, pageContext.locale, index, post.frontmatter.tags.length)
                         ))}
-                        {/* {post.frontmatter.tags.join(', ')} */}
                       </span>
                       <h2 className="post-card-title">{post.frontmatter.title}</h2>
                     </header>
@@ -60,7 +59,7 @@ export const query = graphql`
             title
             caption {
               childImageSharp {
-                fluid(quality: 90, maxWidth: 700) {
+                fluid(quality: 90, maxWidth: 500) {
               ...GatsbyImageSharpFluid_withWebp
                 }
               }
