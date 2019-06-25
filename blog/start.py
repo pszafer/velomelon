@@ -21,7 +21,9 @@ for dir in os.listdir(directory):
                 f1 = f.readlines()
                 for x in f1:
                     if "img" in x and "googleusercontent.com" in x:
-                        url = re.findall('src="(.*?)"', x, re.DOTALL)[0].replace("s400", "s1600")
+                        imgUrl = re.findall('src="(.*?)"', x, re.DOTALL)
+                        print("Got url %s", imgUrl)
+                        url = imgUrl[0].replace("s400", "s1600");
                         imgName = url.rsplit("/", 1)[1].lower()
                         imgPath = os.path.join(main_dir, dir_str, imgName)
                         if not os.path.isfile(imgPath):

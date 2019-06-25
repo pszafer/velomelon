@@ -11,7 +11,8 @@ exports.onCreatePage = ({ page, actions }) => {
   deletePage(page)
   Object.keys(locales).map(lang => {
     const localizedPath = locales[lang].default ? page.path : `${locales[lang].path}${page.path}`
-
+    console.log("Strona")
+    console.log(page)
     return createPage({
       ...page,
       path: removeTrailingSlash(localizedPath),
@@ -80,6 +81,8 @@ exports.createPages = async ({ graphql, actions }) => {
     return a > b ? -1 : a < b ? 1 : 0;
   });
   const posts = postList
+  const postsPerPage = 16
+  const numPages = Math.ceil(posts.length / postsPerPage)
   var allTags = {
     pl: {},
     en: {}
