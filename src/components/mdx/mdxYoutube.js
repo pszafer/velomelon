@@ -8,6 +8,7 @@ const MdxYoutube = ({ children }) =>(
             width: "90%",
             overflow:"hidden",
             maxWidth:"100%",
+            marginBottom: "5px",
             paddingBottom:"56.25%"}}>
         <iframe src={`https://www.youtube.com/embed/${children}`}
                 allowFullScreen="allowFullScreen"

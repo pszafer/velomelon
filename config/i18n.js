@@ -20,7 +20,8 @@ module.exports = {
     florida: "Florida",
     virginia: "Virginia",
     southamerica: "South America",
-    argentina: "Argentina"
+    argentina: "Argentina",
+    california: "California"
   },
   pl: {
     path: `pl`,
@@ -40,6 +41,7 @@ module.exports = {
     florida: "Floryda",
     virginia: "Wirginia",
     southamerica: "Ameryka Płd",
-    argentina: "Argentyna"
+    argentina: "Argentyna",
+    california: "Kalifornia"
   },
 }
