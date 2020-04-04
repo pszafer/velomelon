@@ -1,26 +1,32 @@
+const { round } = require(`lodash`)
+
 module.exports = {
+  siteMetadata: {
+    siteUrl: `https://velomelon.com`,
+  },
   plugins: [
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
-    // `gatsby-transformer-remark`,
     {
-      resolve: `gatsby-mdx`,
+      resolve: `gatsby-plugin-mdx`,
       options: {
         gatsbyRemarkPlugins: [
-          {
-            resolve: `gatsby-remark-images-grid`,
-            options: {
-              gridGap: "20px"
-            }
-          },
+          // {
+          //   resolve: `gatsby-remark-images-grid`,
+          //   options: {
+          //     gridGap: "20px",
+          //     className: "gatsbyRemarkImagesGrid"
+          //   }
+          // },
           {
             resolve: "gatsby-remark-images",
             options: {
               maxWidth: 1035,
+              showCaptions: ['alt', 'title'],
               // sizeByPixelDensity: true,
               withWebp: true,
               linkImagesToOriginal: false,
-              // wrapperStyle: fluidResult => `flex:${_.round(fluidResult.aspectRatio, 2)};`,
+              wrapperStyle: f => `flex:${round(f.aspectRatio, 2)};`,
             }
           }
         ]
@@ -52,6 +58,7 @@ module.exports = {
     `gatsby-transformer-json`,
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-styled-components`,
-    `gatsby-plugin-netlify-cache`
+    `gatsby-plugin-netlify-cache`,
+    `gatsby-plugin-sitemap`
   ],
 }

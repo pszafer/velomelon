@@ -1,0 +1,6 @@
+{
+    "files.exclude": {
+        "**/*.geojson": true,
+        "**/*.jpg": true
+    }
+}

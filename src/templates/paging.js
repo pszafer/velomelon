@@ -4,6 +4,7 @@ import { Header } from "../components/header"
 import LocalizedLink from "../components/localizedLink"
 import Img from 'gatsby-image'
 import getTagTranslation from "../utils/getTagTranslation"
+import Footer from "../components/footer";
 
 
 const Index = ({ data: { allMdx }, pageContext }) => {
@@ -41,6 +42,7 @@ const Index = ({ data: { allMdx }, pageContext }) => {
           </div>
         </div>
       </main>
+      <Footer currentPage={pageContext.currentPage} numPages={pageContext.numPages} />
     </div>
   )
 }
@@ -48,10 +50,12 @@ const Index = ({ data: { allMdx }, pageContext }) => {
 export default Index
 
 export const query = graphql`
-  query Index($locale: String!, $dateFormat: String!) {
+  query Index($locale: String!, $dateFormat: String!, $skip: Int!, $limit: Int!) {
     allMdx(
       filter: { fields: { locale: { eq: $locale } isHidden: { eq: false } } }
       sort: { fields: [frontmatter___date], order: DESC }
+      limit: $limit
+      skip: $skip
     ) {
       edges {
         node {

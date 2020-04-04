@@ -330,6 +330,10 @@ h1 {
     h1 {
         font-size:2.2rem
     }
+
+    .fa-icon svg {
+        height: 15px;
+    }
 }
 
 h2 {
@@ -1132,7 +1136,7 @@ body {
 
 .post-full-image {
     margin: 0 -10vw -165px;
-    background: #c5d2d9 50%;
+    /* background: #c5d2d9 50%; */
     border-radius: 5px;
     overflow: hidden
 }
@@ -2297,8 +2301,8 @@ body {
 }
 
 .post-template .post-content>p:first-child {
-    font-size: 1.25em;
-    line-height: 1.5em
+    /* font-size: 1.25em; */
+    /* line-height: 1.5em */
 }
 
 .post-full-content .kg-image {

@@ -13,7 +13,7 @@ import { FaFacebook, FaYoutube } from "react-icons/fa"
 function Header({title, description }) {
   const { localeInfo } = React.useContext(LocaleContext)
   const data = headerData()
-  if (localeInfo.slug == '/') {
+  if (localeInfo.isHome) {
     return (
       <BackgroundHeader
         className="site-header outer responsive-header-img"

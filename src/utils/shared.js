@@ -6,10 +6,11 @@ function getLocale(locale) {
 }
 
 function isHome(slug) {
-    if (slug == '/' || slug == '/pl'){
-        return true;
+    let isHome = /^(\/*)(\d*)$/.test(slug);
+    if (!isHome) {
+        console.log("SLUG", slug)
     }
-    return false;
+    return /^(\/*)(\d*)$/.test(slug);
 }
 
 function getTranslation(tag, locale) {

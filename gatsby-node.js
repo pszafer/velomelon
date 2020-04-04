@@ -11,8 +11,6 @@ exports.onCreatePage = ({ page, actions }) => {
   deletePage(page)
   Object.keys(locales).map(lang => {
     const localizedPath = locales[lang].default ? page.path : `${locales[lang].path}${page.path}`
-    console.log("Strona")
-    console.log(page)
     return createPage({
       ...page,
       path: removeTrailingSlash(localizedPath),
@@ -70,24 +68,37 @@ exports.createPages = async ({ graphql, actions }) => {
       }
     }
   `)
-
   if (result.errors) {
     return
   }
-  var postList = result.data.blog.edges
-  postList.sort(function (a, b) {
-    a = new Date(a.node.childMdx.frontmatter.date);
-    b = new Date(b.node.childMdx.frontmatter.date);
-    return a > b ? -1 : a < b ? 1 : 0;
-  });
-  const posts = postList
-  const postsPerPage = 16
-  const numPages = Math.ceil(posts.length / postsPerPage)
-  var allTags = {
-    pl: {},
-    en: {}
+  var postlist = {};
+  for (let i = 0; i < result.data.blog.edges.length; ++i){
+    let lang = result.data.blog.edges[i].node.childMdx.fields.locale;
+    if (!postlist[lang]){
+      postlist[lang] = [];
+    }
+    postlist[lang].push(result.data.blog.edges[i])
   }
-  posts.forEach(({ node: post }, index) => {
+
+  for (let lang in postlist){
+    postlist[lang].sort(mdxSortFunction)
+  }
+
+  for (let lang in postlist) {
+    createPagesPerLang(postlist[lang], lang, createPage, postTemplate, tagTemplate);
+  }
+}
+
+function createPagesPerLang(posts, lang, createPage, postTemplate, tagTemplate){
+  
+  const postsPerPage = 15
+  const numPages = Math.ceil(posts.length / postsPerPage)
+  Array.from({ length: numPages }).forEach((_, i) => {
+    createMainPage(createPage, locales[lang].default, lang, i, numPages, postsPerPage)
+  });
+
+  var allTags = {};
+  posts.forEach(({ node: post }, i) => {
     var slug;
     var title;
     const tags = post.childMdx.frontmatter.tags
@@ -96,8 +107,8 @@ exports.createPages = async ({ graphql, actions }) => {
     const isDefault = post.childMdx.fields.isDefault
     const siteTitle = locales[locale].defaultTitle;
     tags.forEach(tag => {
-      if (!allTags[locale][tag]) {
-        allTags[locale][tag] = true
+      if (!allTags[tag]) {
+        allTags[tag] = true
         slug = `/tag/${tag}/`
         title = tag
         createPage({
@@ -116,27 +127,8 @@ exports.createPages = async ({ graphql, actions }) => {
 
     slug = post.relativeDirectory
     title = post.childMdx.frontmatter.title
-    let _prev, _next = null;
-    for (let i=index-1; i>0; --i){
-      if (posts[i] && posts[i].node.childMdx.fields.locale == locale && !posts[i].node.childMdx.fields){
-        _prev = {
-          slug: '/' + posts[i].node.relativeDirectory,
-          title: posts[i].node.childMdx.frontmatter.title
-        }
-        break;
-      }
-    }
-    for (let i = index + 1; i < posts.length; ++i) {
-      if (posts[i] && posts[i].node.childMdx.fields.locale == locale && !posts[i].node.childMdx.fields) {
-        _next = {
-          slug: '/' + posts[i].node.relativeDirectory,
-          title: posts[i].node.childMdx.frontmatter.title
-        }
-        break;
-      }
-    }
-    const previous = _prev;
-    const next = _next;
+    const previous = i > 0 ? createPrevNext(posts[i-1]) : null;
+    const next = i + 1 < posts.length ? createPrevNext(posts[i+1]) : null;
     createPage({
       path: localizedSlug({ isDefault, locale, slug }),
       component: postTemplate,
@@ -152,4 +144,37 @@ exports.createPages = async ({ graphql, actions }) => {
       },
     })
   })
+}
+
+function createMainPage(createPage, isDefault, locale, i, numPages, postsPerPage){
+  const slug = i === 0 ? '/' : `${i + 1}`;
+  const path = removeTrailingSlash(localizedSlug({ isDefault, locale, slug }))
+  createPage({
+    path,
+    component: require.resolve(`./src/templates/paging.js`),
+    context: {
+      limit: postsPerPage,
+      title: locales[locale].defaultTitle,
+      description: locales[locale].defaultDescription,
+      dateFormat: locales[locale].dateFormat,
+      skip: i * postsPerPage,
+      slug,
+      locale,
+      numPages,
+      currentPage: i + 1,
+    }
+  })
+}
+
+function mdxSortFunction(a, b) {
+  a = new Date(a.node.childMdx.frontmatter.date);
+  b = new Date(b.node.childMdx.frontmatter.date);
+  return a > b ? -1 : a < b ? 1 : 0;
+}
+
+function createPrevNext(post){
+  return {
+    slug: '/' + post.node.relativeDirectory,
+    title: post.node.childMdx.frontmatter.title
+  }
 }

@@ -283,6 +283,7 @@
 #viewer {
     width: 100%;
     height: 500px;
+    margin-bottom: 15px
 }
 #viewer > div {
     width: 100%;
@@ -513,4 +514,203 @@
 .youtube:hover {
     color: #d02525;
     opacity: 1;
+}
+
+.gatsby-resp-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    vertical-align: middle;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    box-shadow: inset 0px 0px 0px 400px white;
+}
+
+.gatsbyRemarkImagesGrid-grid {
+    grid-template-columns: repeat(auto-fill, minmax(31%, 1fr));
+    grid-gap: 10px;
+    grid-auto-rows: minmax(100px, auto);
+    grid-auto-flow: dense;
+    padding: 10px;
+}
+
+.gatsbyRemarkImagesGrid-grid .item {
+  padding: 15px;
+  color: #fff;
+  background-color: #444;
+}
+
+.span-2 {
+  grid-column-end: span 2;
+  grid-row-end: span 2;
+}
+
+.span-3 {
+  grid-column-end: span 3;
+  grid-row-end: span 4;
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 4px;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+  flex: 25%;
+  max-width: 25%;
+  padding: 0 4px;
+}
+
+.column img {
+  margin-top: 8px;
+  vertical-align: middle;
+  width: 100%;
+}
+
+.bottom-nav {
+  text-align: center;
+}
+
+.pagination {
+  display: inline-block;
+  position: relative;
+  border-bottom: 1px solid hsla(0,0%,100%,.3);
+  padding: 20px 0;
+}
+
+.pagination a {
+  color: #fff;
+  float: left;
+  padding: 6px 10px;
+  text-decoration: none;
+  transition: background-color .3s;
+  border: 1px solid #ddd;
+  margin: 0 4px;
+}
+
+.pagination a.disabled {
+  pointer-events: none;
+}
+
+.pagination a.active {
+  background-color: var(--gray-color);
+  color: white;
+  border: 1px solid #ddd;
+}
+
+.bottom-center {
+    position: relative;
+}
+
+.bottom-nav {
+    background-color: white;
+}
+
+.pagination a:hover:not(.active) {background-color: #ddd;}
+
+.bottom-inner-nav {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    padding: 40px 0 40px;
+}
+
+
+.bottom-center {
+    position: relative;
+    /* -webkit-box-flex: 1;
+    -ms-flex: 1 1 300px;
+    flex: 1 1 300px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column; */
+    overflow: hidden;
+    width: 100%;
+    margin: auto;
+    padding: 25px;
+    color: #fff;
+    background: #15171a 50%;
+    background-size: cover;
+    border-radius: 5px;
+    -webkit-box-shadow: rgba(39,44,49,.06) 8px 14px 38px,rgba(39,44,49,.03) 1px 3px 8px;
+    box-shadow: 8px 14px 38px rgba(39,44,49,.06),1px 3px 8px rgba(39,44,49,.03)
+}
+
+.bottom-center:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: block;
+    background: linear-gradient(135deg,rgba(0,40,60,.8),rgba(0,20,40,.7));
+    border-radius: 5px;
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px)
+}
+
+.bottom-site-nav {
+    display: flex;
+    justify-content: flex-end
+}
+
+.gatsbyRemarkImagesGrid-column {
+    margin-left: 25px;
+}
+
+.gatsbyRemarkImagesGrid-item {
+    margin-bottom: 25px;
+}
+
+@media (max-width: 767px) {
+
+    .gatsbyRemarkImagesGrid-column {
+        margin-left: 10px;
+    }
+
+    .gatsbyRemarkImagesGrid-item {
+       margin-bottom: 10px;
+    }
+
+    .site-nav {
+        font-size: 70%;
+    }
+
+    .fa-icon svg {
+        height: 15px;
+    }
+
+    .lang .gatsby-image-wrapper {
+        height: 15px !important;
+        width: 20px !important;
+    }
+
+    .hidden-xs {
+        display: none;
+    }
+
+    .site-nav {
+        flex-wrap: wrap;
+        height: unset;
+    }
+
+    .site-nav-left {
+        flex: 1 0 100%;
+        padding: 0;
+    }
+
+    .site-nav-right {
+        justify-content: flex-end;
+        flex-grow: 1;
+    }
+
+    .site-nav-left, .site-nav-right {
+        height: 30px;
+    }
 }

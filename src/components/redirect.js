@@ -18,9 +18,11 @@ class Redirect extends PureComponent {
                 window.localStorage.setItem('language', detected)
             }
             if (detected != locale){
-                const newUrl = withPrefix(`${detected === 'en' ? '' : '/' + detected}${slug}`)
+                const newUrl = withPrefix(`${detected === 'en' ? '' : '/' + detected+'/'}${slug}`)
                 window.localStorage.setItem('language', detected)
-                window.location.replace(newUrl)
+                if (window.location.pathname != newUrl){
+                    window.location.replace(newUrl)
+                }
             }
         }
     }

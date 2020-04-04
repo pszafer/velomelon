@@ -18,16 +18,19 @@ class Layout extends React.Component {
     const localeInfo = {
       locale: pageContext.locale,
       slug: pageContext.slug,
+      isHome: home,
       dateFormat: pageContext.dateFormat,
       siteTitle: pageContext.title
     }
+    let keywords = pageContext.tags ? pageContext.tags : [];
+    keywords = [`blog`, `velomelon`, `travel`, `bicycle`, pageContext.title, ...keywords]
     return (
       <LocaleContext.Provider value={{ localeInfo }}>
         <SEO
           title={pageContext.title}
           description={pageContext.description}
           lang={pageContext.locale}
-          keywords={[`blog`, `velomelon`, `travel`, `bicycle`]}
+          keywords={keywords}
         />
         <Redirect localeInfo={localeInfo}>
           <div id="mainDiv" className={classes}>

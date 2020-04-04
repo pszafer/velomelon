@@ -13,6 +13,7 @@ import ReadProgressLine from '../components/progress'
 import { getTranslation } from "../utils/shared"
 import LocalizedLink from "../components/localizedLink"
 import Img from 'gatsby-image'
+import MdxGrid from "../components/mdx/mdxGrid";
 
 class Post extends React.Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Post extends React.Component {
 
   render(){
     const { data: { mdx }, pageContext } = this.props;
+    console.log(pageContext)
     const components = {
       a: ({ children, ...props }) => {
         return <MdxLink {...props}>{children}</MdxLink>
@@ -34,6 +36,9 @@ class Post extends React.Component {
       youtube: MdxYoutube,
       wrapper: ({ children, ...props }) => {
         return <>{children}</>
+      },
+      grid: ({ children, ...props }) => {
+        return <MdxGrid {...props}>{children}</MdxGrid>
       }
     }
     return (
@@ -73,7 +78,7 @@ class Post extends React.Component {
                 <div className="post-content">
                   <MDXProvider components={components}>
                     <MDXRenderer>
-                      {mdx.code.body}
+                      {mdx.body}
                     </MDXRenderer>
                   </MDXProvider>
                 </div>
@@ -114,9 +119,7 @@ export const query = graphql`
               }
             }
       }
-      code {
-        body
-      }
+      body
     }
   }
 `
