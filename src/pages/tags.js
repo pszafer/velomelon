@@ -27,7 +27,6 @@ const Tags = ({ data: { allMdx, captionTag }, pageContext }) => {
   const tagList = Object.keys(tagHash);
 
   const determineSize = (tagItems) => {
-    console.log(tagItems);
     if (tagItems > 16) {
       return '8xl';
     } else if (tagItems > 8) {
