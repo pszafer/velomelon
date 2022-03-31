@@ -116,7 +116,7 @@ const Post = (props) => {
                   ))}
                 </ul>
               </section>
-              <Heading size="5xl" as="h1" className="post-full-title">
+              <Heading size="6xl" as="h1" className="post-full-title">
                 {mdx.frontmatter.title}
               </Heading>
             </header>
@@ -162,9 +162,8 @@ export const query = graphql`
   query Post(
     $locale: String!
     $title: String!
-    $dateFormat: String!
-  ) # $slug: String!
-  {
+    $dateFormat: String! # $slug: String!
+  ) {
     mdx(
       frontmatter: { title: { eq: $title } }
       fields: { locale: { eq: $locale } }
