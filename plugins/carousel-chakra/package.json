@@ -1,0 +1,31 @@
+{
+    "name": "carousel-chakra",
+    "version": "0.0.4",
+    "description": "Add modal to remark images <picture> element.",
+    "main": "index.js",
+    "dependencies": {},
+    "devDependencies": {},
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/pszafer/gatsby-remark-images-modal.git"
+    },
+    "keywords": [
+      "gatsby",
+      "gatsby-plugin",
+      "image",
+      "markdown",
+      "picture",
+      "zoom",
+      "modal"
+    ],
+    "author": "Pawel Szafer",
+    "license": "MIT",
+    "bugs": {
+      "url": "https://github.com/pszafer/gatsby-remark-images-modal/issues"
+    },
+    "homepage": "https://github.com/pszafer/gatsby-remark-images-modal#readme"
+  }
+  

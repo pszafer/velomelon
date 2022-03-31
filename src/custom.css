@@ -78,7 +78,7 @@
 
 .post-full-title, .site-title-text {
     color: var(--light-green);
-    -webkit-text-stroke: 1px #000;
+    /* -webkit-text-stroke: 1px #000; */
     text-shadow: 3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
@@ -193,7 +193,7 @@
     top: 0px;
     right: 0px;
     left: 0px;
-    z-index: 350;
+    z-index: 39;
     display: flex;
     -webkit-box-align: center;
     align-items: center;

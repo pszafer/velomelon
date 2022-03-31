@@ -1,14 +1,29 @@
-import React from 'react'
-import GatsbyLink from 'gatsby-link'
+import React from 'react';
+import GatsbyLink from 'gatsby-link';
+import { Link as CharkaLink } from '@chakra-ui/react';
 
 const Link = (props) => {
-    const isExternalLink = props.to.startsWith('http')
-    if (!isExternalLink) {
-        return <GatsbyLink {...props}>{props.children}</GatsbyLink>;
-    }
+  const isExternalLink = props.to.startsWith('http');
+  if (!isExternalLink) {
     return (
-        <a target="_blank" href={props.to} {...props}  rel="noopener noreferrer">{props.children}</a>
+      <CharkaLink
+        sx={{
+          _hover: {
+            textDecoration: 'none',
+          },
+        }}
+        as={GatsbyLink}
+        {...props}
+      >
+        {props.children}
+      </CharkaLink>
     );
-}
+  }
+  return (
+    <a target="_blank" href={props.to} {...props} rel="noopener noreferrer">
+      {props.children}
+    </a>
+  );
+};
 
-export default Link;    
+export default Link;
