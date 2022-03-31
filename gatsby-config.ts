@@ -105,8 +105,8 @@ const config: GatsbyConfig = {
     `gatsby-transformer-json`,
     `gatsby-plugin-react-helmet`,
     `gatsby-plugin-styled-components`,
-    // `gatsby-plugin-netlify-cache`,
     `gatsby-plugin-sitemap`,
+    'gatsby-plugin-netlify'
   ]
 }
 export default config
