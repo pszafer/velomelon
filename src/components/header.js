@@ -8,7 +8,7 @@ import { Flag } from './flag';
 import { IoIosHome, IoMdGlobe, IoMdGrid } from 'react-icons/io';
 import { FaFacebook, FaYoutube } from 'react-icons/fa';
 import Logo from './logo';
-import { Icon, Heading, Flex } from '@chakra-ui/react';
+import { Icon, Heading, Flex, Text } from '@chakra-ui/react';
 import { BackgroundHeader } from './backgroundimg';
 const Header = ({ title, description }) => {
   const { localeInfo } = useContext(LocaleContext);
@@ -34,12 +34,22 @@ const Header = ({ title, description }) => {
         }
         plFlag: file(relativePath: { eq: "pl.png" }) {
           childImageSharp {
-            gatsbyImageData(width: 30, height: 25, layout: FIXED)
+            gatsbyImageData(
+              width: 30
+              height: 25
+              layout: FIXED
+              formats: [AUTO, AVIF, WEBP]
+            )
           }
         }
         enFlag: file(relativePath: { eq: "us.png" }) {
           childImageSharp {
-            gatsbyImageData(width: 30, height: 25, layout: FIXED)
+            gatsbyImageData(
+              width: 30
+              height: 25
+              layout: FIXED
+              formats: [AUTO, AVIF, WEBP]
+            )
           }
         }
       }
@@ -53,10 +63,23 @@ const Header = ({ title, description }) => {
       >
         <div className="inner">
           <div className="site-header-content">
-            <Flex as="h1" className="site-title">
-              <span className="site-title-text">{title}</span>
+            <Flex
+              className="site-title"
+              margin={0}
+              alignItems="center"
+              direction={{ base: 'column', md: 'row' }}
+            >
+              <Text
+                as="h1"
+                fontSize="8xl"
+                color="green.light"
+                textShadow="3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
+                margin={'5px'}
+              >
+                {title}
+              </Text>
               <Logo
-                className="site-logo"
+                maxHeight="85px"
                 alt={title}
                 logoType="svg"
                 logo={data.logo.publicURL}
@@ -72,12 +95,14 @@ const Header = ({ title, description }) => {
     );
   }
   return (
-    <header className="site-header outer">
-      <div className="inner">
-        <div className="site-header-content"></div>
-        <Nav isHome={false} title={title} headerData={data} />
-      </div>
-    </header>
+    <>
+      <header className="site-header outer">
+        <div className="inner">
+          <Nav isHome={false} title={title} headerData={data} />
+          <div className="site-header-content"></div>
+        </div>
+      </header>
+    </>
   );
 };
 
@@ -116,7 +141,7 @@ function Nav({ isHome, title, headerData }) {
                 aria-label={item.alt}
                 alt={item.alt}
               >
-                <Icon as={item.icon} /> {item.text}
+                <Icon verticalAlign="center" as={item.icon} /> {item.text}
               </LocalizedLink>
             </li>
           ))}

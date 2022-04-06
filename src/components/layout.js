@@ -16,22 +16,12 @@ const Layout = (props) => {
     dateFormat: pageContext.dateFormat,
     siteTitle: pageContext.title,
   };
-  let keywords = pageContext.tags ? pageContext.tags : [];
-  keywords = [
-    `blog`,
-    `velomelon`,
-    `travel`,
-    `bicycle`,
-    pageContext.title,
-    ...keywords,
-  ];
   return (
     <LocaleContext.Provider value={{ localeInfo }}>
       <Seo
-        title={pageContext.title}
+        pageContext={pageContext}
         description={pageContext.description}
         lang={pageContext.locale}
-        keywords={keywords}
       />
       <Redirect localeInfo={localeInfo}>
         <div id="mainDiv" className={classes}>

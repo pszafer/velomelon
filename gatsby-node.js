@@ -43,7 +43,6 @@ exports.onCreateNode = ({ node, actions }) => {
       name: `dateFormat`,
       value: locales[lang].dateFormat,
     });
-    createNodeField({ node, name: `dupa`, value: 'dupa blada' });
   }
 };
 

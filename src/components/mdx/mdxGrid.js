@@ -27,12 +27,18 @@ const MdxGrid = ({ children, handleAlbumClick, images, slug, ...props }) => {
           ) => {
             // const aspectRatio = gatsbyImageData.width / gatsbyImageData.height;
             return (
-              <Img
-                key={`img${i}`}
-                alt={relativePath}
-                image={gatsbyImageData}
-                // style={{ flex: round(aspectRatio, 2) }}
-              />
+              <div
+                key={`masDiv1${i}`}
+                className="gatsbyRemarkImagesGrid-item"
+                onClick={() => handleAlbumClick(relativePath)}
+                role="button"
+              >
+                <Img
+                  alt={relativePath}
+                  image={gatsbyImageData}
+                  // style={{ flex: round(aspectRatio, 2) }}
+                />
+              </div>
             );
           }
         )}
@@ -56,16 +62,7 @@ const MasonryLayout = ({ columns, children, handleAlbumClick }) => {
   // divide children into columns
   for (let i = 0; i < children.length; i++) {
     const columnIndex = i % columns;
-    columnWrapper[`column${columnIndex}`].push(
-      <div
-        key={`masDiv1${i}`}
-        className="gatsbyRemarkImagesGrid-item"
-        onClick={() => handleAlbumClick(i)}
-        role="button"
-      >
-        {children[i]}
-      </div>
-    );
+    columnWrapper[`column${columnIndex}`].push(children[i]);
   }
 
   // wrap children in each column with a div

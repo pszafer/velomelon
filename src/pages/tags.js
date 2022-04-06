@@ -5,17 +5,9 @@ import LocalizedLink from '../components/localizedLink';
 import useTranslations from '../components/useTranslations';
 import { getTranslation } from '../utils/shared';
 import { BackgroundHeader } from '../components/backgroundimg';
-import {
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalCloseButton,
-  ModalBody,
-  Tag,
-  TagLabel,
-  Avatar,
-  Heading,
-} from '@chakra-ui/react';
+import { Box, Tag, TagLabel, Heading } from '@chakra-ui/react';
+import { TagCloud } from 'react-tagcloud';
+
 const Tags = ({ data: { allMdx, captionTag }, pageContext }) => {
   const { tags } = useTranslations();
   var tagHash = {};
@@ -24,18 +16,38 @@ const Tags = ({ data: { allMdx, captionTag }, pageContext }) => {
       (x) => (tagHash[x] = tagHash[x] ? tagHash[x] + 1 : 1)
     )
   );
-  const tagList = Object.keys(tagHash);
 
-  const determineSize = (tagItems) => {
-    if (tagItems > 16) {
-      return '8xl';
-    } else if (tagItems > 8) {
-      return '6xl';
-    } else if (tagItems > 2) {
-      return '3xl';
-    }
-    return 'xl';
+  const tagList = Object.keys(tagHash).map((value) => {
+    return {
+      value,
+      count: tagHash[value] * 2,
+    };
+  });
+
+  const customRenderer = (tag, size, color) => {
+    return (
+      <LocalizedLink
+        to={'/tag/' + tag.value}
+        key={tag.value}
+        margin={4}
+        padding={2}
+        fontSize={`${size * 2}px`}
+      >
+        <Tag
+          size="lg"
+          fontSize={`${size * 2}px`}
+          color="gray.600"
+          backgroundColor={color}
+          borderRadius="full"
+          padding={8}
+          textTransform="capitalize"
+        >
+          <TagLabel>{getTranslation(tag.value, pageContext.locale)}</TagLabel>
+        </Tag>
+      </LocalizedLink>
+    );
   };
+
   return (
     <div className="site-wrapper">
       <Header title={pageContext.title} description={pageContext.description} />
@@ -46,22 +58,48 @@ const Tags = ({ data: { allMdx, captionTag }, pageContext }) => {
           title=""
           background={captionTag}
           style={{
-            // Defaults are overwrite-able by setting one or each of the following:
             width: '100%',
-            // height: '100%',
             position: 'absolute',
           }}
         />
         <div className="inner">
           <article className="post-full post">
             <header className="post-full-header">
-              <Heading size="5xl" as="h1" className="post-full-title">
+              <Heading
+                fontSize="8xl"
+                as="h1"
+                color="green.light"
+                textShadow="3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
+              >
                 {tags}
               </Heading>
             </header>
-            <section className="post-full-content">
+            <Box
+              pos="relative"
+              as="section"
+              rounded="lg"
+              background="white"
+              padding="70px 100px 0"
+              minHeight="230px"
+              lineHeight="tall"
+              fontSize="4xl"
+              boxShadow="2xl"
+              margin="0 auto"
+              className="post-full-content"
+            >
               <div className="post-content">
-                <ul className="allTags">
+                <TagCloud
+                  minSize={12}
+                  maxSize={35}
+                  tags={tagList}
+                  renderer={customRenderer}
+                  colorOptions={{
+                    alpha: 0.5,
+                    luminosity: 'dark',
+                    format: 'rgba',
+                  }}
+                />
+                {/* <ul className="allTags">
                   {tagList.map((x) => (
                     <li key={x}>
                       <LocalizedLink to={'/tag/' + x}>
@@ -84,27 +122,15 @@ const Tags = ({ data: { allMdx, captionTag }, pageContext }) => {
                       </LocalizedLink>
                     </li>
                   ))}
-                </ul>
+                </ul> */}
               </div>
-            </section>
+            </Box>
           </article>
         </div>
       </main>
     </div>
   );
 };
-
-function determineCssClass(tagItems) {
-  console.log(tagItems);
-  if (tagItems > 16) {
-    return 'tagclass-16';
-  } else if (tagItems > 8) {
-    return 'tagclass-8';
-  } else if (tagItems > 2) {
-    return 'tagclass-4';
-  }
-  return 'tagclass-2';
-}
 
 export default Tags;
 
@@ -139,9 +165,6 @@ export const query = graphql`
     }
     captionTag: file(relativePath: { eq: "tag_caption.jpg" }) {
       childImageSharp {
-        fluid(quality: 90, maxWidth: 4160) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
         gatsbyImageData(quality: 90, width: 4160)
       }
     }

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Flex, useMediaQuery, HStack, Button } from '@chakra-ui/react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ArrowBackIcon, ArrowForwardIcon } from '@chakra-ui/icons';
-import { GatsbyImage } from 'gatsby-plugin-image';
+import { Img } from './img';
 import Logo from './logo';
 const PlaceHolder = () => (
   <img
@@ -24,16 +24,10 @@ const Slide = ({ imgSrc, inView, name }) => {
     >
       {inView ? (
         <>
-          <Box
-            pos="absolute"
-            left="15rem"
-            bottom="2rem"
-            opacity="0.9"
-            zIndex={1}
-          >
-            <Logo className="floating-header-logo" logoTypes="600" />
+          <Box pos="absolute" left="1rem" top="2rem" opacity="0.9" zIndex={1}>
+            <Logo className="floating-header-logo" logoType="600" />
           </Box>
-          <GatsbyImage alt={name} image={imgSrc} />
+          <Img alt={name} image={imgSrc} objectFit="contain" />
         </>
       ) : (
         <PlaceHolder />
@@ -42,7 +36,7 @@ const Slide = ({ imgSrc, inView, name }) => {
   );
 };
 
-const Carousel = ({ album, currentSlide, photoSaltKey }) => {
+const Carousel = ({ album, currentSlide }) => {
   const [slidesInView, setSlidesInView] = useState(new Set());
   const [emblaRef, emblaApi] = useEmblaCarousel({
     align: 'center',
@@ -149,7 +143,6 @@ const Carousel = ({ album, currentSlide, photoSaltKey }) => {
           ) => (
             <Slide
               key={`slide${sid}`}
-              photoSaltKey={photoSaltKey}
               imgSrc={gatsbyImageData}
               name={relativePath}
               inView={slidesInView.has(sid)}

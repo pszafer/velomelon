@@ -14,7 +14,6 @@ import { Style, Stroke } from 'ol/style';
 import { getDistance } from 'ol/sphere';
 import { DistanceData } from './distanceData';
 import { IoIosBicycle, IoIosAirplane, IoMdBus } from 'react-icons/io';
-// import { toStringXY } from 'ol/coordinate';
 import 'ol/ol.css';
 
 const toFeatures = (geojsons) =>
@@ -46,7 +45,7 @@ const Legend = () => (
 
 const MapWrapper = (props) => {
   // set intial state
-  const { urls = [] } = props;
+  const { urls = [], zoom = 4 } = props;
   const [map, setMap] = useState();
   const [geojsons, setGeoJson] = useState([]);
   const [distanceData, setdistanceData] = useState(false);
@@ -225,18 +224,10 @@ const MapWrapper = (props) => {
       //     return layer;
       //   });
       map.getView().fit(layer1.getSource().getExtent(), map.getSize());
-      map.getView().setZoom(2.5);
+      map.getView().setZoom(zoom);
       countdiistance(layer1.getSource().getFeatures());
-      //   featuresLayer.setSource(bikeLayer);
-
-      //   // fit map to feature extent (with 100px of padding)
-      //   //   map.getView().fit(featuresLayer.getSource().getExtent(), {
-      //   //     padding: [100, 100, 100, 100],
-      //   //   });
-      //   map.getView().fit(bikeLayer.getSource().getExtent(), map.getSize());
-      //   map.getView().setZoom(2.5);
     }
-  }, [geojsons, urls, map, lineStyles]);
+  }, [geojsons, urls, map, lineStyles, zoom]);
 
   // map click handler
 

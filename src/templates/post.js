@@ -13,6 +13,8 @@ import { getTranslation } from '../utils/shared';
 import LocalizedLink from '../components/localizedLink';
 import { Img } from '../components/img';
 import MdxGrid from '../components/mdx/mdxGrid';
+import Seo from '../components/seo';
+import { getImage } from 'gatsby-plugin-image';
 import {
   Modal,
   ModalOverlay,
@@ -21,6 +23,8 @@ import {
   ModalBody,
   useDisclosure,
   Heading,
+  Box,
+  Text,
 } from '@chakra-ui/react';
 import Carousel from '../components/carousel';
 import { BackgroundHeader } from '../components/backgroundimg';
@@ -36,7 +40,10 @@ const Post = (props) => {
   // const album = React.useMemo(() => albumData, [albumData]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const finalRef = useRef();
-  const handleAlbumClick = (photoId) => {
+  const handleAlbumClick = (photoAlt) => {
+    const photoId = albumData.findIndex(
+      ({ node: { relativePath } }) => photoAlt === relativePath
+    );
     setCurrentSlide(photoId);
     onOpen();
   };
@@ -44,14 +51,18 @@ const Post = (props) => {
     a: ({ children, ...props }) => {
       return <MdxLink {...props}>{children}</MdxLink>;
     },
-    gpx: ({ children }) => {
-      return <MdxMap url={location.href}>{children}</MdxMap>;
+    gpx: ({ children, zoom = 4 }) => {
+      return (
+        <MdxMap url={location.href} zoom={zoom}>
+          {children}
+        </MdxMap>
+      );
     },
     sphere: ({ children }) => {
       return <MdxSphere url={location.href}>{children}</MdxSphere>;
     },
     youtube: MdxYoutube,
-    wrapper: ({ children, ...props }) => {
+    wrapper: ({ children }) => {
       return <>{children}</>;
     },
     grid: ({ children, ...props }) => {
@@ -83,6 +94,15 @@ const Post = (props) => {
   };
   return (
     <div className="site-wrapper">
+      <Seo
+        pageContext={pageContext}
+        title={pageContext.title}
+        description={pageContext.description}
+        lang={pageContext.locale}
+        ogImage={getImage(
+          mdx.frontmatter.caption.childImageSharp.gatsbyImageData
+        )}
+      />
       <Header title={pageContext.title} description={pageContext.description} />
       <main className="site-main outer">
         <BackgroundHeader
@@ -99,12 +119,14 @@ const Post = (props) => {
           <article className="post-full post">
             <header className="post-full-header">
               <section className="post-full-meta">
-                <time
-                  className="post-full-meta-date"
+                <Text
+                  as="time"
+                  color="green.dark"
+                  textShadow="1px 1px 0 black"
                   dateTime={mdx.frontmatter.dateShort}
                 >
                   {mdx.frontmatter.dateFull}
-                </time>
+                </Text>
                 <span className="date-divider">/</span>
                 <ul className="tags">
                   {mdx.frontmatter.tags.map((tag, index) => (
@@ -116,7 +138,12 @@ const Post = (props) => {
                   ))}
                 </ul>
               </section>
-              <Heading size="6xl" as="h1" className="post-full-title">
+              <Heading
+                fontSize={{ base: '6xl', md: '8xl' }}
+                as="h1"
+                color="green.light"
+                textShadow="3px 3px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000"
+              >
                 {mdx.frontmatter.title}
               </Heading>
             </header>
@@ -125,13 +152,26 @@ const Post = (props) => {
                 image={mdx.frontmatter.caption.childImageSharp.gatsbyImageData}
               />
             </figure>
-            <section className="post-full-content">
+            <Box
+              pos="relative"
+              as="section"
+              rounded="lg"
+              background="white"
+              pt={{ base: 12, md: 16 }}
+              px={{ base: 12, md: 24 }}
+              minHeight="230px"
+              lineHeight="tall"
+              fontSize={{ base: '3xl', md: '4xl' }}
+              boxShadow="2xl"
+              margin="0 auto"
+              className="post-full-content"
+            >
               <div className="post-content">
                 <MDXProvider components={components}>
                   <MDXRenderer>{mdx.body}</MDXRenderer>
                 </MDXProvider>
               </div>
-            </section>
+            </Box>
           </article>
         </div>
       </main>
@@ -162,7 +202,8 @@ export const query = graphql`
   query Post(
     $locale: String!
     $title: String!
-    $dateFormat: String! # $slug: String!
+    $dateFormat: String!
+    $slug: String!
   ) {
     mdx(
       frontmatter: { title: { eq: $title } }
@@ -188,7 +229,7 @@ export const query = graphql`
     allFile(
       filter: {
         extension: { in: ["jpg", "png", "jpeg"] }
-        # relativeDirectory: { eq: $slug }
+        relativeDirectory: { eq: $slug }
       }
     ) {
       edges {

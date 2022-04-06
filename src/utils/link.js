@@ -11,6 +11,9 @@ const Link = (props) => {
           _hover: {
             textDecoration: 'none',
           },
+          _focus: {
+            outline: 0,
+          },
         }}
         as={GatsbyLink}
         {...props}

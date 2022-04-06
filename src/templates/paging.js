@@ -5,7 +5,7 @@ import LocalizedLink from '../components/localizedLink';
 import { Img } from '../components/img';
 import getTagTranslation from '../utils/getTagTranslation';
 import Footer from '../components/footer';
-
+import { Box, Heading } from '@chakra-ui/react';
 const Index = ({ data: { allMdx }, pageContext }) => {
   return (
     <div className="site-wrapper">
@@ -14,9 +14,14 @@ const Index = ({ data: { allMdx }, pageContext }) => {
         <div className="inner">
           <div className="post-feed">
             {allMdx.edges.map(({ node: post }) => (
-              <article
+              <Box
+                as="article"
                 key={`${post.frontmatter.title}-${post.fields.locale}`}
                 className="post-card post"
+                mx={5}
+                boxShadow="sm"
+                bg="white"
+                mb={5}
               >
                 <LocalizedLink
                   alt={post.frontmatter.title}
@@ -33,6 +38,7 @@ const Index = ({ data: { allMdx }, pageContext }) => {
                 <div className="post-card-content">
                   <LocalizedLink
                     alt={post.frontmatter.title}
+                    mx={5}
                     className="post-card-content-link"
                     to={`/${post.parent.relativeDirectory}`}
                   >
@@ -47,16 +53,16 @@ const Index = ({ data: { allMdx }, pageContext }) => {
                           )
                         )}
                       </span>
-                      <h2 className="post-card-title">
+                      <Heading as="h2" fontSize="3xl" mt={0}>
                         {post.frontmatter.title}
-                      </h2>
+                      </Heading>
                     </header>
                     <section className="post-card-excerpt">
                       <p>{post.excerpt}</p>
                     </section>
                   </LocalizedLink>
                 </div>
-              </article>
+              </Box>
             ))}
           </div>
         </div>

@@ -1,17 +1,15 @@
 import React from 'react';
-
+import { Box } from '@chakra-ui/react';
 // Only use <LocalizedLink /> for internal links
 const MdxYoutube = ({ children }) => (
-  <div
-    style={{
-      position: 'relative',
-      height: 0,
-      width: '90%',
-      overflow: 'hidden',
-      maxWidth: '100%',
-      marginBottom: '5px',
-      paddingBottom: '56.25%',
-    }}
+  <Box
+    pos="relative"
+    height={0}
+    width="90%"
+    overflow="hidden"
+    maxWidth="100%"
+    my={2}
+    pb="55%"
   >
     <iframe
       src={`https://www.youtube.com/embed/${children}`}
@@ -26,7 +24,7 @@ const MdxYoutube = ({ children }) => (
       }}
       frameBorder="0"
     ></iframe>
-  </div>
+  </Box>
 );
 
 export default MdxYoutube;
