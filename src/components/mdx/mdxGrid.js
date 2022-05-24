@@ -1,57 +1,88 @@
-import React from "react"
+import React from 'react';
+import { Img } from '../img';
+import { Box } from '@chakra-ui/react';
 
-const MdxGrid = ({ children, ...props }) => {
-  
+const MdxGrid = ({ children, handleAlbumClick, images, slug, ...props }) => {
+  const columns = props.columns
+    ? props.columns
+    : images.length < 4
+    ? images.length
+    : 3;
   if (!children.props || !children.props.children) {
-    console.log("GRID ERROR")
-    console.log(children)
-    return (<></>);
+    return (
+      <MasonryLayout
+        columns={columns}
+        gap={25}
+        handleAlbumClick={handleAlbumClick}
+      >
+        {images.map(
+          (
+            {
+              node: {
+                childImageSharp: { gatsbyImageData },
+                relativePath,
+              },
+            },
+            i
+          ) => {
+            // const aspectRatio = gatsbyImageData.width / gatsbyImageData.height;
+            return (
+              <div
+                key={`masDiv1${i}`}
+                className="gatsbyRemarkImagesGrid-item"
+                onClick={() => handleAlbumClick(relativePath)}
+                role="button"
+              >
+                <Img
+                  alt={relativePath}
+                  image={gatsbyImageData}
+                  // style={{ flex: round(aspectRatio, 2) }}
+                />
+              </div>
+            );
+          }
+        )}
+      </MasonryLayout>
+    );
   }
-  const images = React.Children.toArray(children.props.children).filter(child => {
-    return child && child.$$typeof
-  })
-  const columns = props.columns ? props.columns : images.length < 4 ? images.length : 3;
-  return (<MasonryLayout key={images.length+Math.random()*2+"-maskey"} columns={columns} gap={25}>{images}</MasonryLayout>)
-  // return (<figure className="gatsbyRemarkImagesGrid"><div className="gatsbyRemarkImagesGrid-grid">{cols}</div></figure>)
-}
+  return <></>;
+};
 
-export default MdxGrid
+export default MdxGrid;
 
-const MasonryLayout = props => {
+const MasonryLayout = ({ columns, children, handleAlbumClick }) => {
   const columnWrapper = {};
   const result = [];
 
   // create columns
-  for (let i = 0; i < props.columns; i++) {
+  for (let i = 0; i < columns; i++) {
     columnWrapper[`column${i}`] = [];
   }
 
   // divide children into columns
-  for (let i = 0; i < props.children.length; i++) {
-    const columnIndex = i % props.columns;
-    columnWrapper[`column${columnIndex}`].push(
-      <div key={'masDiv1' + i} className="gatsbyRemarkImagesGrid-item">
-        {props.children[i]}
-      </div>
-    );
+  for (let i = 0; i < children.length; i++) {
+    const columnIndex = i % columns;
+    columnWrapper[`column${columnIndex}`].push(children[i]);
   }
 
   // wrap children in each column with a div
-  for (let i = 0; i < props.columns; i++) {
+  for (let i = 0; i < columns; i++) {
     result.push(
-      <div key={'masDiv2' + i} 
+      <div
+        key={`masDiv2${i}`}
         className="gatsbyRemarkImagesGrid-column"
         style={{
           flex: 1,
-        }}>
+        }}
+      >
         {columnWrapper[`column${i}`]}
       </div>
     );
   }
 
   return (
-    <div className="gatsbyRemarkImagesGrid" style={{ display: 'flex' }}>
+    <Box mt={2} className="gatsbyRemarkImagesGrid" style={{ display: 'flex' }}>
       {result}
-    </div>
+    </Box>
   );
-}
+};
